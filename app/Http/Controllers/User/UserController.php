@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
-use App\Models\Hospital;
-use App\Models\Department;
 
 use Validator;
 use Illuminate\Http\File;
@@ -31,15 +29,14 @@ class UserController extends Controller
 
     public function __invoke()
     {
-        $data['users'] = User::all();
+        $data['users'] = User::orderBy('id','desc')->get();
         return view('user.index')->with($data);
     }
 
 
     public function edit($id){
         $data['user'] = User::find($id);
-        $data['hospitals'] = Hospital::get();
-        $data['departments'] = Department::get();
+//        dd($data['user']);
         return view('user.edit')->with($data);
     }
 
@@ -47,14 +44,13 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'hospital_id' => 'required',
-            'department_id' => 'required',
-            'firstname' => 'required|max:45|min:3|alpha',
-            'lastname' => 'required|max:45|min:3|alpha',
+            'first_name' => 'required|max:45|min:3|alpha',
+            'last_name' => 'required|max:45|min:3|alpha',
             'designation' => 'required|max:45|min:3',
-            'email' => 'required|email|max:100|unique:users',
-            'password' => 'required|min:6|max:20',
-            'mobile_no' => 'required|max:17|min:11|regex:/\+*[0-9]+$/',
+            'email' => 'required|email|max:100|unique:users,id,'.$request->id,
+            'password' => 'nullable|min:6|max:20',
+            'user_type' => 'required',
+            'mobile_no' => 'required|max:11|min:11|regex:/\+*[0-9]+$/',
             'image' => 'nullable|mimes:jpg,jpeg,png,gif|max:4000'
         ]);
 
@@ -65,7 +61,7 @@ class UserController extends Controller
         try {
             if($request->hasFile('image')){
                 $photo_name = time().'.'.$request->image->extension();
-                $upload_path = public_path('images/user');
+                $upload_path = public_path('uploads/users');
                 $request->image->move($upload_path, $photo_name);
                 $request->offsetSet('photo', $photo_name);
             }
@@ -77,9 +73,13 @@ class UserController extends Controller
                 }
             }
 
+            if(empty($request->password)){
+               $request->offsetUnset('password');
+            }
+
             $user->update($request->all());
             $request->session()->flash('msg_success', 'User successfully updated.');
-            return redirect('user');
+            return redirect('users');
         }catch (\Exception $e){
             $request->session()->flash('msg_error', 'User not updated.');
             return redirect()->back();

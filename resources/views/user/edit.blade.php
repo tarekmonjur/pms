@@ -5,79 +5,38 @@
         <h1>
             Edit User
             <small> show edit user data.</small>
+            <a class="btn btn-primary pull-right" href="{{url('/users')}}"> View User</a>
         </h1>
-        <span class="breadcrumb"><a class="btn btn-success pull-right" href="{{url('/user')}}"> View User</a></span>
     </section>
 
     <section class="content">
         <div class="row">
             <div class="col-md-12">
-                <div class="box box-success">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"></h3>
-                    </div>
-
-                    <form role="form" method="post" action="{{url('user/edit')}}" enctype="multipart/form-data">
+                <div class="box box-primary">
+                    <form role="form" method="post" action="{{url('users/edit')}}" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <input type="hidden" value="{{$user->id}}" name="id">
                         <div class="box-body">
-
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group {{ $errors->has('hospital_id') ? ' has-error' : '' }}">
-                                        <label for="hospital_id">Hospital Name</label>
-                                        <select class="form-control" name="hospital_id">
-                                            <option value=""> ---- Select Hospital -----</option>
-                                            @foreach($hospitals as $hospital)
-                                                <option value="{{$hospital->id}}" selected="@if($hospital->id == $user->hospital_id) selected @endif">{{$hospital->hospital_name}}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('hospital_id'))
+                                    <div class="form-group {{ $errors->has('first_name') ? ' has-error' : '' }}">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" class="form-control" name="first_name" value="{{ (old('first_name'))?:$user->first_name}}" autofocus placeholder="Enter first name">
+                                        @if ($errors->has('first_name'))
                                             <span class="help-block">
-                                        <strong>{{ $errors->first('hospital_id') }}</strong>
+                                        <strong>{{ $errors->first('first_name') }}</strong>
                                     </span>
                                         @endif
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="form-group {{ $errors->has('department_id') ? ' has-error' : '' }}">
-                                        <label for="department_id">Department Name</label>
-                                        <select class="form-control" name="department_id">
-                                            <option value=""> ---- Select Department -----</option>
-                                            @foreach($departments as $department)
-                                                <option value="{{$department->id}}" selected="@if($department->id == $user->department_id) selected @endif">{{$department->department_name}}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('department_id'))
+                                    <div class="form-group {{ $errors->has('last_name') ? ' has-error' : '' }}">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" class="form-control" name="last_name" value="{{ (old('last_name'))?:$user->last_name }}" autofocus placeholder="Enter last name">
+                                        @if ($errors->has('last_name'))
                                             <span class="help-block">
-                                        <strong>{{ $errors->first('department_id') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group {{ $errors->has('firstname') ? ' has-error' : '' }}">
-                                        <label for="firstname">First Name</label>
-                                        <input type="text" class="form-control" value="{{$user->firstname or old('firstname')}}" name="firstname" placeholder="Enter first name">
-                                        @if ($errors->has('firstname'))
-                                            <span class="help-block">
-                                        <strong>{{ $errors->first('firstname') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group {{ $errors->has('lastname') ? ' has-error' : '' }}">
-                                        <label for="lastname">Last Name</label>
-                                        <input type="text" class="form-control" value="{{$user->lastname or old('lastname')}}" name="lastname" placeholder="Enter last name">
-                                        @if ($errors->has('lastname'))
-                                            <span class="help-block">
-                                        <strong>{{ $errors->first('lastname') }}</strong>
+                                        <strong>{{ $errors->first('last_name') }}</strong>
                                     </span>
                                         @endif
                                     </div>
@@ -88,7 +47,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('designation') ? ' has-error' : '' }}">
                                         <label for="designation">Designation</label>
-                                        <input type="text" class="form-control" value="{{$user->designation or old('designation')}}" name="designation" placeholder="Enter designation">
+                                        <input type="text" class="form-control" name="designation" value="{{ (old('designation'))?:$user->designation }}" autofocus placeholder="Enter designation">
                                         @if ($errors->has('designation'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('designation') }}</strong>
@@ -100,7 +59,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('mobile_no') ? ' has-error' : '' }}">
                                         <label for="mobile_no">Mobile No</label>
-                                        <input type="text" class="form-control" value="{{$user->mobile_no or old('mobile_no')}}" name="mobile_no" placeholder="Enter mobile no">
+                                        <input type="text" class="form-control" name="mobile_no" value="{{ (old('mobile_no'))?:$user->mobile_no }}" autofocus placeholder="Enter mobile no">
                                         @if ($errors->has('mobile_no'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('mobile_no') }}</strong>
@@ -114,7 +73,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
                                         <label for="email">Email Address</label>
-                                        <input type="email" class="form-control" value="{{$user->email or old('email')}}" name="email" placeholder="Enter email address">
+                                        <input type="email" class="form-control" name="email" value="{{ (old('email'))?:$user->email }}" autofocus placeholder="Enter email address">
                                         @if ($errors->has('email'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -126,7 +85,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                                         <label for="password">Password</label>
-                                        <input type="password" class="form-control" name="password" placeholder="Enter Password">
+                                        <input type="password" class="form-control" name="password" placeholder="Enter Password" autocomplete="off">
                                         @if ($errors->has('password'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -138,20 +97,42 @@
 
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="form-group {{ $errors->has('user_type') ? ' has-error' : '' }}">
+                                        <label for="user_type">User Role/Type</label>
+                                        <select name="user_type" id="user_type" class="form-control">
+                                            <option value="">--- Select User Role ---</option>
+                                            <option value="director" @if($user->user_type == "director") selected @endif>Director</option>
+                                            <option value="admin" @if($user->user_type == "admin") selected @endif>Admin</option>
+                                            <option value="employee" @if($user->user_type == "employee") selected @endif>Employee</option>
+                                        </select>
+                                        @if ($errors->has('user_type'))
+                                            <span class="help-block">
+                                        <strong>{{ $errors->first('user_type') }}</strong>
+                                    </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('image') ? ' has-error' : '' }}">
                                         <label for="photo">Browse User Photo</label>
                                         <input type="file" class="form-control btn-primary" name="image">
                                         @if ($errors->has('image'))
                                             <span class="help-block">
-                                            <strong>{{ $errors->first('image') }}</strong>
-                                        </span>
+                                        <strong>{{ $errors->first('image') }}</strong>
+                                    </span>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-2">
+                                    <img src="{{$user->fullphoto}}" width="80px" height="80px">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="address">Address</label>
-                                        <textarea class="form-control" name="address" placeholder="Enter address">{{$user->address or old('address')}}</textarea>
+                                        <label for="address">User Full Address</label>
+                                        <textarea class="form-control" name="address" placeholder="Enter address">{{ (old('address'))?:$user->address }}</textarea>
                                     </div>
                                 </div>
                             </div>

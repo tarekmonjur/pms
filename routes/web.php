@@ -36,7 +36,7 @@ Route::group(['prefix' => 'password'],function(){
 /*
  * Users routes.
  */
-Route::group(['prefix'=>'user'],function(){
+Route::group(['prefix'=>'users'],function(){
     Route::get('/','User\UserController');
     Route::get('create','Auth\RegisterController@showRegister');
     Route::post('create','Auth\RegisterController@register');
@@ -44,6 +44,19 @@ Route::group(['prefix'=>'user'],function(){
     Route::post('edit','User\UserController@update');
     Route::get('delete/{id}','User\UserController@delete');
 });
+
+
+/*
+ * Project routes.
+ */
+Route::resource('projects', 'Project\ProjectController');
+
+
+/*
+ * Task routes.
+ */
+Route::resource('tasks', 'Task\TaskController');
+
 
 
 

@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{asset('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('css/AdminLTE.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/sweetalert2.css')}}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{asset('css/skins/_all-skins.min.css')}}">
@@ -34,7 +35,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
-<body class="hold-transition skin-green layout-top-nav">
+<body class="hold-transition skin-black layout-top-nav">
     <div class="wrapper">
 
         @include('layouts.common.header')
@@ -77,54 +78,56 @@
     <script src="{{asset('bower_components/fastclick/lib/fastclick.js')}}"></script>
     <!-- AdminLTE App -->
     <script src="{{asset('js/adminlte.min.js')}}"></script>
+    <script src="{{asset('js/sweetalert2.js')}}"></script>
 
     <script>
         var baseUrl = '{{url('/')}}';
-        function ckDelete(){
-            var check = confirm('Are you sure delete this?');
-            if(check){
-                return true;
-            }else{
-                return false;
-            }
+
+        function confirmAction(btn, message, url){
+            swal({
+                title: message,
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#218838',
+                cancelButtonColor: '#c82333',
+                confirmButtonText: 'Yes, '+btn+' it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false
+            }).then(function () {
+                console.log(url);
+                window.location.href=url;
+            }, function (dismiss) {
+                if (dismiss === 'cancel') {
+                    swal(
+                        'Cancelled',
+                        'your stuff is safe.',
+                        'error'
+                    )
+                }
+            })
         }
 
-        function ckAccept(){
-            var check = confirm('Are you sure accept this?');
-            if(check){
-                return true;
-            }else{
-                return false;
-            }
-        }
-
-        function ckReject(){
-            var check = confirm('Are you sure reject this?');
-            if(check){
-                return true;
-            }else{
-                return false;
-            }
-        }
-
-        function PrintInvoice(elem){
-            var invoice_print = document.getElementById('invoice_print');
-            invoice_print.style.visibility='hidden';
-
-            var mywindow = window.open('', 'printwindow');
-            mywindow.document.write('<html><head><title>Invoice</title>' +
-                '<link rel="stylesheet" type="text/css" href="'+baseUrl+'/css/AdminLTE.min.css" />' +
-                '<link rel="stylesheet" type="text/css" href="'+baseUrl+'/bower_components/bootstrap/dist/css/bootstrap.min.css" />');
-            mywindow.document.write('</head><body>');
-            mywindow.document.write(document.getElementById(elem).innerHTML);
-            mywindow.document.write('</body></html>');
-            setTimeout(function () {
-                mywindow.print();
-                mywindow.close();
-                invoice_print.style.visibility='visible';
-            }, 500);
-            return true;
-        }
+//        function PrintInvoice(elem){
+//            var invoice_print = document.getElementById('invoice_print');
+//            invoice_print.style.visibility='hidden';
+//
+//            var mywindow = window.open('', 'printwindow');
+//            mywindow.document.write('<html><head><title>Invoice</title>' +
+//                '<link rel="stylesheet" type="text/css" href="'+baseUrl+'/css/AdminLTE.min.css" />' +
+//                '<link rel="stylesheet" type="text/css" href="'+baseUrl+'/bower_components/bootstrap/dist/css/bootstrap.min.css" />');
+//            mywindow.document.write('</head><body>');
+//            mywindow.document.write(document.getElementById(elem).innerHTML);
+//            mywindow.document.write('</body></html>');
+//            setTimeout(function () {
+//                mywindow.print();
+//                mywindow.close();
+//                invoice_print.style.visibility='visible';
+//            }, 500);
+//            return true;
+//        }
 
         $(function () {
             $('#example1').DataTable();

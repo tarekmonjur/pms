@@ -17,7 +17,7 @@ class CreateTasksTable extends Migration
             $table->increments('id');
             $table->integer('project_id')->unsigned();
             $table->string('task_title');
-            $table->enum('task_type', ['pending', 'progress', 'done']);
+            $table->enum('task_type', ['task', 'bug', 'issue']);
             $table->date('task_start_date')->nullable();
             $table->date('task_end_date')->nullable();
             $table->text('task_details')->nullable();

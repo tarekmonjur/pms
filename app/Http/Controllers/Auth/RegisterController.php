@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Department;
-use App\Models\Hospital;
 use App\Models\User;
 
 use Validator;
@@ -54,9 +52,7 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showRegister(){
-        $data['hospitals'] = Hospital::get();
-        $data['departments'] = Department::get();
-        return view('user.create')->with($data);
+        return view('user.create');
     }
 
 
@@ -70,14 +66,13 @@ class RegisterController extends Controller
     protected function register(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'hospital_id' => 'required',
-            'department_id' => 'required',
-            'firstname' => 'required|max:45|min:3|alpha',
-            'lastname' => 'required|max:45|min:3|alpha',
+            'first_name' => 'required|max:45|min:3|alpha',
+            'last_name' => 'required|max:45|min:3|alpha',
             'designation' => 'required|max:45|min:3',
             'email' => 'required|email|max:100|unique:users',
             'password' => 'required|min:6|max:20',
-            'mobile_no' => 'required|max:17|min:11|regex:/\+*[0-9]+$/',
+            'user_type' => 'required',
+            'mobile_no' => 'required|max:11|min:11|regex:/\+*[0-9]+$/',
             'image' => 'nullable|mimes:jpg,jpeg,png,gif|max:4000'
         ]);
 
@@ -88,14 +83,14 @@ class RegisterController extends Controller
         try{
             if($request->hasFile('image')){
                 $photo_name = time().'.'.$request->image->extension();
-                $upload_path = public_path('/images/user');
+                $upload_path = public_path('/uploads/users/');
                 $request->image->move($upload_path, $photo_name);
                 $request->offsetSet('photo', $photo_name);
             }
             User::create($request->all());
-            $request->session()->flash('msg_success','User create success!');
+            $request->session()->flash('msg_success','User create success.');
         }catch(\Exception $e){
-            $request->session()->flash('msg_error','Not Success.Try again!');
+            $request->session()->flash('msg_error','Not Success.Try again.');
         }
         return redirect()->back();
     }

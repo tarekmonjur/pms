@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','email','password','designation','user_type','photo','status','address'
+        'first_name','last_name','email','password','designation','mobile_no','user_type','photo','status','address'
     ];
 
     /**
@@ -49,13 +49,22 @@ class User extends Authenticatable
     }
 
 
+    public function getUserRoleAttribute(){
+        return ucfirst($this->user_type);
+    }
+
+
     public function getFullPhotoAttribute(){
-        return asset('/images/user/'.$this->photo);
+        if($this->photo) {
+            return asset('/uploads/users/' . $this->photo);
+        }else{
+            return asset('/images/user.png');
+        }
     }
 
 
     public function getCreatedAtAttribute($value){
-        return Carbon::parse($value)->format('M d Y');
+        return Carbon::parse($value)->format('d M Y');
     }
 
 
