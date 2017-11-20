@@ -22,24 +22,28 @@
                         <th>Project Doc</th>
                         <th>Project Details</th>
                         <th>Created</th>
-                        <th>Action</th>
+                        <th width="80px">Action</th>
                     </tr>
                     </thead>
 
                     <tbody>
                     @foreach($projects as $project)
                         <tr>
-                            <td>{{$project->iteration}}</td>
+                            <td>{{$loop->iteration}}</td>
                             <td>{{$project->project_title}}</td>
                             <td>{{$project->project_start_date}}</td>
                             <td>{{$project->project_end_date}}</td>
-                            <td>@if($project->project_doc)<a href="{{url('uploads/projects/'.$project->project_doc)}}">view doc</a>@else No doc @endif</td>
+                            <td>@if($project->project_doc)<a target="_blank" href="{{asset('uploads/projects/'.$project->project_doc)}}">view doc</a>@else No doc @endif</td>
                             <td>{{$project->project_details}}</td>
                             <td>{{$project->created_at->format('Y-m-d')}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-success" href="{{url('projects/'.$project->id.'edit/')}}">Edit</a>
-                                    <a onclick="return ckDelete()" class="btn btn-sm btn-danger" href="{{url('projects/'.$user->id)}}">Delete</a>
+                                    <a class="btn btn-sm btn-success" href="{{url('projects/'.$project->id.'/edit')}}">Edit</a>
+                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this project?', 'delete_{{$project->id}}')" class="btn btn-sm btn-danger" href="#">Delete</a>
+                                    <form method="post" action="{{url('projects/'.$project->id)}}" id="delete_{{$project->id}}">
+                                        {{csrf_field()}}
+                                        {{method_field('delete')}}
+                                    </form>
                                 </div>
                                 <div class="btn-group">
 

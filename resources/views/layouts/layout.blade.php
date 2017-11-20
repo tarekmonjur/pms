@@ -15,10 +15,13 @@
     <link rel="stylesheet" href="{{asset('bower_components/font-awesome/css/font-awesome.min.css')}}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{asset('bower_components/Ionicons/css/ionicons.min.css')}}">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="{{asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{asset('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('css/AdminLTE.min.css')}}">
+
     <link rel="stylesheet" href="{{asset('css/sweetalert2.css')}}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
@@ -72,6 +75,8 @@
     <!-- DataTables -->
     <script src="{{asset('bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+    <!-- bootstrap datepicker -->
+    <script src="{{asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
     <!-- SlimScroll -->
     <script src="{{asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
     <!-- FastClick -->
@@ -99,6 +104,34 @@
             }).then(function () {
                 console.log(url);
                 window.location.href=url;
+            }, function (dismiss) {
+                if (dismiss === 'cancel') {
+                    swal(
+                        'Cancelled',
+                        'your stuff is safe.',
+                        'error'
+                    )
+                }
+            })
+        }
+
+
+        function confirmDelete(btn, message, id){
+            swal({
+                title: message,
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#218838',
+                cancelButtonColor: '#c82333',
+                confirmButtonText: 'Yes, '+btn+' it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false
+            }).then(function () {
+                console.log(id);
+                document.getElementById(id).submit();
             }, function (dismiss) {
                 if (dismiss === 'cancel') {
                     swal(
@@ -140,7 +173,11 @@
                 'autoWidth'   : false
             });
 
-
+            //Date picker
+            $('.datepicker').datepicker({
+                autoclose: true,
+                format: "yyyy-mm-dd"
+            })
         });
     </script>
 
