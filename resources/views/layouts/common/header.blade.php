@@ -13,7 +13,7 @@
                 <ul class="nav navbar-nav">
                     <li @if($menu == '') class="active" @endif ><a href="{{url('/')}}">Dashboard<span class="sr-only">(current)</span></a></li>
                     <li @if($menu == 'projects') class="active" @endif ><a href="{{url('/projects')}}">Manage Projects</a></li>
-                    <li @if($menu == 'tasks') class="active" @endif ><a href="{{url('/tasks')}}">Manage Task</a></li>
+                    <li @if($menu == 'tasks') class="active" @endif ><a href="{{url('/tasks')}}">Manage Tasks</a></li>
                     <li @if($menu == 'users') class="active" @endif ><a href="{{url('/users')}}">Manage User</a></li>
                 </ul>
             </div>
@@ -25,21 +25,12 @@
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            @if($auth->photo =='')
-                            <img src="{{url('images/img/user2-160x160.jpg')}}" class="user-image" alt="User Image">
-                            @else
                             <img src="{{$auth->fullphoto}}" class="user-image" alt="User Image">
-                            @endif
                             <span class="hidden-xs">{{$auth->fullname}}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="user-header">
-                                @if($auth->photo =='')
-                                    <img src="{{url('images/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
-                                @else
-                                    <img src="{{$auth->fullphoto}}" class="img-circle" alt="User Image">
-                                @endif
-
+                                <img src="{{$auth->fullphoto}}" class="img-circle" alt="User Image">
                                 <p>
                                     {{$auth->fullname}} - {{$auth->designation}}
                                     <small>Member since {{$auth->created_at}}</small>

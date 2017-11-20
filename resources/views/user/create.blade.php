@@ -135,7 +135,7 @@
                     </div>
 
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="submit" class="btn btn-primary">Create User</button>
                     </div>
                 </form>
             </div>

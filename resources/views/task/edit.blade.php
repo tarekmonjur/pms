@@ -3,8 +3,8 @@
 
     <section class="content-header">
         <h1>
-            Create Task
-            <small> task create form.</small>
+            Edit Task
+            <small> task update form.</small>
             <a class="btn btn-primary pull-right" href="{{url('/tasks')}}"> View Tasks</a>
         </h1>
     </section>
@@ -20,7 +20,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group {{ $errors->has('task_title') ? ' has-error' : '' }}">
                                         <label for="task_title">Task Title</label>
-                                        <input type="text" class="form-control" name="task_title" value="{{ old('task_title') }}" autofocus placeholder="Enter Task Title">
+                                        <input type="text" class="form-control" name="task_title" value="{{ (old('task_title'))?:$task->task_title }}" autofocus placeholder="Enter Task Title">
                                         @if ($errors->has('task_title'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('task_title') }}</strong>
@@ -37,7 +37,7 @@
                                         <select name="project_name" id="project_name" class="form-control">
                                             <option value="">--- Select Project ---</option>
                                             @foreach($projects as $project)
-                                                <option value="{{$project->id}}">{{$project->project_title}}</option>
+                                                <option value="{{$project->id}}" @if($project->id == $task->project_id) selected @endif>{{$project->project_title}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('project_name'))
@@ -52,9 +52,9 @@
                                         <label for="task_type">Task Type</label>
                                         <select name="task_type" id="task_type" class="form-control">
                                             <option value="">--- Select Task Type ---</option>
-                                            <option value="task">Task</option>
-                                            <option value="bug">Bug</option>
-                                            <option value="issue">Issue</option>
+                                            <option value="task" @if($task->task_type == "task") selected @endif>Task</option>
+                                            <option value="bug" @if($task->task_type == "bug") selected @endif>Bug</option>
+                                            <option value="issue" @if($task->task_type == "issue") selected @endif>Issue</option>
                                         </select>
                                         @if ($errors->has('task_type'))
                                             <span class="help-block">
@@ -69,7 +69,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('task_start_date') ? ' has-error' : '' }}">
                                         <label for="task_start_date">Task Start Date</label>
-                                        <input type="text" class="form-control datepicker" name="task_start_date" value="{{ old('task_start_date') }}" placeholder="Enter Task Start Date">
+                                        <input type="text" class="form-control datepicker" name="task_start_date" value="{{ (old('task_start_date'))?:$task->task_start_date }}" placeholder="Enter Task Start Date">
                                         @if ($errors->has('task_start_date'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('task_start_date') }}</strong>
@@ -80,7 +80,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('task_end_date') ? ' has-error' : '' }}">
                                         <label for="task_end_date">Task End Date</label>
-                                        <input type="text" class="form-control datepicker" name="task_end_date" value="{{ old('task_end_date') }}" placeholder="Enter Task End Date">
+                                        <input type="text" class="form-control datepicker" name="task_end_date" value="{{ (old('task_end_date'))?:$task->task_end_date }}" placeholder="Enter Task End Date">
                                         @if ($errors->has('task_end_date'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('task_end_date') }}</strong>
@@ -96,10 +96,10 @@
                                         <label for="task_status">Task Status</label>
                                         <select name="task_status" id="task_type" class="form-control">
                                             <option value="">--- Select Task Status ---</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="progress">In Progress</option>
-                                            <option value="postponed">Postponed</option>
-                                            <option value="done">Done</option>
+                                            <option value="pending" @if($task->task_status == "pending") selected @endif>Pending</option>
+                                            <option value="progress" @if($task->task_status == "progress") selected @endif>In Progress</option>
+                                            <option value="postponed" @if($task->task_status == "postponed") selected @endif>Postponed</option>
+                                            <option value="done" @if($task->task_status == "done") selected @endif>Done</option>
                                         </select>
                                         @if ($errors->has('task_status'))
                                             <span class="help-block">
@@ -108,7 +108,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_document') ? ' has-error' : '' }}">
                                         <label for="task_document">Task Document</label>
                                         <input type="file" class="form-control" name="task_document">
@@ -119,13 +119,20 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="col-md-2" style="margin-top: 15px">
+                                    @if($project->task_doc)
+                                        <a href="{{asset('uploads/tasks/'.$project->task_doc)}}">View Task Document</a>
+                                    @else
+                                        <a href="#">No Task Document</a>
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group {{ $errors->has('task_details') ? ' has-error' : '' }}">
                                         <label for="task_details">Task Details</label>
-                                        <textarea name="task_details" id="task_details" class="form-control" placeholder="Enter Task Details">{{old('task_details')}}</textarea>
+                                        <textarea name="task_details" id="task_details" class="form-control" placeholder="Enter Task Details">{{(old('task_details'))?:$task->task_details}}</textarea>
                                         @if ($errors->has('task_details'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('task_details') }}</strong>
@@ -142,7 +149,7 @@
                                         <select name="assign_by" id="assign_by" class="form-control">
                                             <option value="0">--- Select Assign By ---</option>
                                             @foreach($users as $user)
-                                                <option value="{{$user->id}}">{{$user->fullname}}</option>
+                                                <option value="{{$user->id}}" @if($user->id == $task->assign_by) selected @endif>{{$user->fullname}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('assign_by'))
@@ -158,7 +165,7 @@
                                         <select name="assign_to" id="assign_to" class="form-control">
                                             <option value="0">--- Select Assign To ---</option>
                                             @foreach($users as $user)
-                                                <option value="{{$user->id}}">{{$user->fullname}}</option>
+                                                <option value="{{$user->id}}" @if($user->id == $task->assign_to) selected @endif>{{$user->fullname}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('assign_to'))
@@ -172,7 +179,7 @@
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">Create Task</button>
+                            <button type="submit" class="btn btn-primary">Update Task</button>
                         </div>
                     </form>
                 </div>

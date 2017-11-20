@@ -21,6 +21,8 @@ class CreateTasksTable extends Migration
             $table->date('task_start_date')->nullable();
             $table->date('task_end_date')->nullable();
             $table->text('task_details')->nullable();
+            $table->enum('task_status', ['pending', 'progress', 'postponed', 'done']);
+            $table->string('task_doc')->nullable();
             $table->integer('assign_by')->unsigned()->default(0);
             $table->integer('assign_to')->unsigned()->default(0);
             $table->integer('created_by')->unsigned()->default(0);

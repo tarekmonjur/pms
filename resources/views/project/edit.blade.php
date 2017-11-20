@@ -104,7 +104,7 @@
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-success">Update</button>
+                            <button type="submit" class="btn btn-primary">Update Project</button>
                         </div>
                     </form>
                 </div>

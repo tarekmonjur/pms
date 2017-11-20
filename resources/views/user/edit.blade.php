@@ -139,7 +139,7 @@
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-success">Update</button>
+                            <button type="submit" class="btn btn-primary">Update User</button>
                         </div>
                     </form>
                 </div>

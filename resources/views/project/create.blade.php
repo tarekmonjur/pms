@@ -73,9 +73,9 @@
                                         <label for="project_status">Project Status</label>
                                         <select name="project_status" id="project_status" class="form-control">
                                             <option value="">--- Select Project Status ---</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="progress">Progress</option>
-                                            <option value="done">Done</option>
+                                            <option value="pending" @if(old('project_status') == "pending") selected @endif>Pending</option>
+                                            <option value="progress" @if(old('project_status') == "progress") selected @endif>Progress</option>
+                                            <option value="done" @if(old('project_status') == "done") selected @endif>Done</option>
                                         </select>
                                         @if ($errors->has('project_status'))
                                             <span class="help-block">
@@ -97,7 +97,7 @@
                         </div>
 
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-primary">Create Project</button>
                         </div>
                     </form>
                 </div>

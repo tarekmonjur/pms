@@ -46,7 +46,7 @@ class ProjectController extends Controller
            'project_title' => 'required|max:255',
            'project_start_date' => 'required|date_format:Y-m-d',
            'project_end_date' => 'required|date_format:Y-m-d',
-            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,pdf,doc,ppt|max:4000',
+            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,ppt|max:4000',
             'project_status' => 'required',
         ]);
         try {
@@ -86,7 +86,7 @@ class ProjectController extends Controller
             'project_title' => 'required|max:255',
             'project_start_date' => 'required|date_format:Y-m-d',
             'project_end_date' => 'required|date_format:Y-m-d',
-            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,pdf,doc,ppt|max:4000',
+            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,ppt|max:4000',
             'project_status' => 'required',
         ]);
 

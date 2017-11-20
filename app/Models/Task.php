@@ -6,5 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    //
+    public function project()
+    {
+        return $this->belongsTo('App\Models\Project');
+    }
+
+    public function assignBy()
+    {
+        return $this->belongsTo('App\Models\User', 'assign_by', 'id');
+    }
+
+    public function assignTo()
+    {
+        return $this->belongsTo('App\Models\User', 'assign_to', 'id');
+    }
 }
