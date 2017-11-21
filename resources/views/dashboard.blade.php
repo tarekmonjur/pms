@@ -15,7 +15,7 @@
                     <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Total Projects</span>
-                        <span class="info-box-number">90</span>
+                        <span class="info-box-number">{{$total_project}}</span>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                     <span class="info-box-icon bg-yellow"><i class="fa fa-google-plus"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Total Pending Projects</span>
-                        <span class="info-box-number">41,410</span>
+                        <span class="info-box-number">{{$total_pending_project}}</span>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Total In-progress Projects</span>
-                        <span class="info-box-number">760</span>
+                        <span class="info-box-number">{{$total_progress_project}}</span>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Total Complete Projects</span>
-                        <span class="info-box-number">2,000</span>
+                        <span class="info-box-number">{{$total_complete_project}}</span>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                     <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Total Tasks</span>
-                        <span class="info-box-number">90</span>
+                        <span class="info-box-number">{{$total_task}}</span>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                     <span class="info-box-icon bg-yellow"><i class="fa fa-google-plus"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Total Pending Tasks</span>
-                        <span class="info-box-number">41,410</span>
+                        <span class="info-box-number">{{$total_pending_task}}</span>
                     </div>
                 </div>
             </div>
@@ -88,7 +88,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Total In-progress Tasks</span>
-                        <span class="info-box-number">760</span>
+                        <span class="info-box-number">{{$total_progress_task}}</span>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Total Complete Tasks</span>
-                        <span class="info-box-number">2,000</span>
+                        <span class="info-box-number">{{$total_complete_task}}</span>
                     </div>
                 </div>
             </div>

@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="{{asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{asset('bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
+    <!-- fullCalendar -->
+    <link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.min.css')}}">
+    <link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.print.min.css')}}" media="print">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('css/AdminLTE.min.css')}}">
 
@@ -72,6 +75,8 @@
     <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
     <!-- Bootstrap 3.3.7 -->
     <script src="{{asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{asset('bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
     <!-- DataTables -->
     <script src="{{asset('bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
@@ -83,7 +88,13 @@
     <script src="{{asset('bower_components/fastclick/lib/fastclick.js')}}"></script>
     <!-- AdminLTE App -->
     <script src="{{asset('js/adminlte.min.js')}}"></script>
+    <!-- fullCalendar -->
+    <script src="{{asset('bower_components/moment/moment.js')}}"></script>
+    <script src="{{asset('bower_components/fullcalendar/dist/fullcalendar.min.js')}}"></script>
+
     <script src="{{asset('js/sweetalert2.js')}}"></script>
+
+    @yield('script')
 
     <script>
         var baseUrl = '{{url('/')}}';

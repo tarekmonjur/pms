@@ -34,6 +34,18 @@ class ProjectController extends Controller
     }
 
 
+    public function show($project)
+    {
+        $data['project'] = Project::with('tasks.comments','tasks.assignTo','tasks.assignBy')->find($project);
+        $data['tasks'] = $data['project']->tasks()
+            ->selectRaw("task_title as title, DATE_FORMAT(task_start_date, '%Y,%m,%d') as start, DATE_FORMAT(task_end_date, '%Y,%m,%d') as end, 
+            (CASE WHEN task_status = 'pending' THEN '#f39c12' WHEN task_status = 'progress' THEN '#00c0ef' WHEN task_status = 'postponed' THEN '#f56954' WHEN task_status = 'done' THEN '#00a65a' END) as backgroundColor")
+            ->get()->toJson();
+//        dd($data['tasks']);
+        return view('project.show')->with($data);
+    }
+
+
     public function create()
     {
         return view('project.create');

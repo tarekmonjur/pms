@@ -31,7 +31,7 @@
                     @foreach($projects as $project)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$project->project_title}}</td>
+                            <td><a target="_blank" href="{{url('projects/'.$project->id)}}">{{$project->project_title}}</a></td>
                             <td>{{$project->project_start_date}}</td>
                             <td>{{$project->project_end_date}}</td>
                             <td>

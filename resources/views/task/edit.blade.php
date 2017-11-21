@@ -13,8 +13,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
-                    <form role="form" method="post" action="{{url('tasks')}}" enctype="multipart/form-data">
+                    <form role="form" method="post" action="{{url('tasks/'.$task->id)}}" enctype="multipart/form-data">
                         {{csrf_field()}}
+                        {{method_field('put')}}
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-12">

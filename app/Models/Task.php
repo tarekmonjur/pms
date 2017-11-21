@@ -20,4 +20,10 @@ class Task extends Model
     {
         return $this->belongsTo('App\Models\User', 'assign_to', 'id');
     }
+
+    public function comments()
+    {
+        return $this->hasMany('App\Models\TaskComment');
+    }
+
 }
