@@ -10,4 +10,6 @@ class Project extends Model
     {
         return $this->hasMany('App\Models\Task');
     }
+
+
 }

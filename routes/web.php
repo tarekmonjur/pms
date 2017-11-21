@@ -57,6 +57,14 @@ Route::resource('projects', 'Project\ProjectController');
  */
 Route::resource('tasks', 'Task\TaskController');
 
+/*
+ * Task Comment routes.
+ */
+
+Route::resource('tasks/{task}/comments', 'Task\CommentController');
+
+
+
 
 
 

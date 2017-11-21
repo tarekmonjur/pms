@@ -66,9 +66,9 @@ class RegisterController extends Controller
     protected function register(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'first_name' => 'required|max:45|min:3|alpha',
-            'last_name' => 'required|max:45|min:3|alpha',
-            'designation' => 'required|max:45|min:3',
+            'first_name' => 'required|max:45|min:3|alpha_spaces',
+            'last_name' => 'required|max:45|min:3|alpha_spaces',
+            'designation' => 'required|max:45|min:3|alpha_spaces_dot',
             'email' => 'required|email|max:100|unique:users',
             'password' => 'required|min:6|max:20',
             'user_type' => 'required',
@@ -83,7 +83,7 @@ class RegisterController extends Controller
         try{
             if($request->hasFile('image')){
                 $photo_name = time().'.'.$request->image->extension();
-                $upload_path = public_path('/uploads/users/');
+                $upload_path = public_path('uploads/users');
                 $request->image->move($upload_path, $photo_name);
                 $request->offsetSet('photo', $photo_name);
             }

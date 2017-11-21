@@ -42,6 +42,8 @@ class DashboardController extends Controller
         $data['total_pending_task'] = Task::where('task_status','pending')->count();
         $data['total_progress_task'] = Task::where('task_status','progress')->count();
         $data['total_complete_task'] = Task::where('task_status','done')->count();
+
+        $data['projects'] = Project::with('tasks')->get();
         return view('dashboard')->with($data);
     }
 

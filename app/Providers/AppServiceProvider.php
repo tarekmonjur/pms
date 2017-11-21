@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,41 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::share('menu', \Request::segment(1));
+
+        Validator::extend('alpha_spaces', function($attribute, $value)
+        {
+            return preg_match('/^[\pL\s]+$/u', $value);
+        });
+
+        Validator::extend('alpha_spaces_dot', function($attribute, $value)
+        {
+            return preg_match('/^[\pL\s\.]+$/u', $value);
+        });
+
+        Validator::extend('percentage', function($attribute, $value)
+        {
+            return preg_match('/^\d{1,2}(\.\d{1,2})?$/', $value);
+        });
+
+        Validator::extend('less_then', function($attribute, $value, $parameters, $validator)
+        {
+            $validator->addReplacer('less_then',function($message, $attribute, $rule, $parameters)
+            {
+                return str_replace(':other',$parameters[0], $message);
+            });
+
+            return ($parameters[0] > $value)?true:false;
+        });
+
+        Validator::extend('greater_then', function($attribute, $value, $parameters, $validator)
+        {
+            $validator->addReplacer('greater_then',function($message, $attribute, $rule, $parameters)
+            {
+                return str_replace([':other'],$parameters, $message);
+            });
+
+            return ($parameters[0] < $value)?true:false;
+        });
     }
 
     /**

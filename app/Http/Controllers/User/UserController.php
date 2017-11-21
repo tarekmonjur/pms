@@ -4,8 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Models\User;
 
+use Illuminate\Support\Facades\File;
 use Validator;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -44,9 +44,9 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'first_name' => 'required|max:45|min:3|alpha',
-            'last_name' => 'required|max:45|min:3|alpha',
-            'designation' => 'required|max:45|min:3',
+            'first_name' => 'required|max:45|min:3|alpha_spaces',
+            'last_name' => 'required|max:45|min:3|alpha_spaces',
+            'designation' => 'required|max:45|min:3|alpha_spaces_dot',
             'email' => 'required|email|max:100|unique:users,id,'.$request->id,
             'password' => 'nullable|min:6|max:20',
             'user_type' => 'required',

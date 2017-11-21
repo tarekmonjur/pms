@@ -105,5 +105,64 @@
             </div>
         </div>
         <!-- /.row -->
+
+        <div class="row">
+            <section class="content">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title text-center">Project and Tasks Status</h3>
+                    </div>
+                    <div class="box-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th>Project Title</th>
+                                <th>Start/End Date</th>
+                                <th>Status</th>
+                                <th>Pending</th>
+                                <th>Progress</th>
+                                <th>Postponed</th>
+                                <th>Done</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach($projects as $project)
+                                <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td><a target="_blank" href="{{url('projects/'.$project->id)}}">{{$project->project_title}}</a></td>
+                                    <td>Start - {{$project->project_start_date}} <br> End - {{$project->project_end_date}}</td>
+                                    <td>
+                                        <label class="label @if($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">{{$project->project_status}}</label>
+                                    </td>
+                                    <td><label class="label label-warning">{{$project->tasks->where('task_status','pending')->count()}}</label></td>
+                                    <td><label class="label label-info">{{$project->tasks->where('task_status','progress')->count()}}</label></td>
+                                    <td><label class="label label-danger">{{$project->tasks->where('task_status','postponed')->count()}}</label></td>
+                                    <td><label class="label label-success">{{$project->tasks->where('task_status','done ')->count()}}</label></td>
+                                    <td><label class="label label-primary">{{$project->tasks->count()}}</label></td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+
+                            <tfoot>
+                            <tr>
+                                <th>SL</th>
+                                <th>Project Title</th>
+                                <th>Start/End Date</th>
+                                <th>Status</th>
+                                <th>Pending</th>
+                                <th>Progress</th>
+                                <th>Postponed</th>
+                                <th>Done</th>
+                                <th>Total</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
     </section>
 @endsection

@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -21,9 +22,15 @@ class TaskController extends Controller
     |
     */
 
+    protected $auth;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function($request, $next){
+            $this->auth = Auth::user();
+            return $next($request);
+        });
     }
 
 
@@ -54,23 +61,24 @@ class TaskController extends Controller
             'task_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,ppt|max:4000',
         ]);
         try {
-            $taks = new Task;
-            $taks->task_title = $request->task_title;
-            $taks->project_id = $request->project_name;
-            $taks->task_type = $request->task_type;
-            $taks->task_start_date = $request->task_start_date;
-            $taks->task_end_date = $request->task_end_date;
-            $taks->task_details = $request->task_details;
-            $taks->task_status = $request->task_status;
-            $taks->assign_by = $request->assign_by;
-            $taks->assign_to = $request->assign_to;
+            $task = new Task;
+            $task->task_title = $request->task_title;
+            $task->project_id = $request->project_name;
+            $task->task_type = $request->task_type;
+            $task->task_start_date = $request->task_start_date;
+            $task->task_end_date = $request->task_end_date;
+            $task->task_details = $request->task_details;
+            $task->task_status = $request->task_status;
+            $task->assign_by = $request->assign_by;
+            $task->assign_to = $request->assign_to;
             if($request->hasFile('task_document')){
                 $fileName = time().'.'.$request->task_document->extension();
                 $uploadPath = public_path('uploads/tasks');
                 $request->task_document->move($uploadPath, $fileName);
-                $taks->task_doc = $fileName;
+                $task->task_doc = $fileName;
             }
-            $taks->save();
+            $task->created_by = $this->auth->id;
+            $task->save();
 
             $request->session()->flash('msg_success', 'Task successfully added.');
             return redirect('tasks');
@@ -78,6 +86,13 @@ class TaskController extends Controller
             $request->session()->flash('msg_error', 'Task not added.');
             return redirect()->back();
         }
+    }
+
+
+    public function show($task)
+    {
+        $data['task'] = Task::with('comments', 'assignTo', 'assignBy')->find($task);
+        return view('task.show')->with($data);
     }
 
 
@@ -103,23 +118,23 @@ class TaskController extends Controller
         ]);
 
         try{
-            $taks = Task::find($request->task);
-            $taks->task_title = $request->task_title;
-            $taks->project_id = $request->project_name;
-            $taks->task_type = $request->task_type;
-            $taks->task_start_date = $request->task_start_date;
-            $taks->task_end_date = $request->task_end_date;
-            $taks->task_details = $request->task_details;
-            $taks->task_status = $request->task_status;
-            $taks->assign_by = $request->assign_by;
-            $taks->assign_to = $request->assign_to;
+            $task = Task::find($request->task);
+            $task->task_title = $request->task_title;
+            $task->project_id = $request->project_name;
+            $task->task_type = $request->task_type;
+            $task->task_start_date = $request->task_start_date;
+            $task->task_end_date = $request->task_end_date;
+            $task->task_details = $request->task_details;
+            $task->task_status = $request->task_status;
+            $task->assign_by = $request->assign_by;
+            $task->assign_to = $request->assign_to;
             if($request->hasFile('task_document')){
                 $fileName = time().'.'.$request->task_document->extension();
                 $uploadPath = public_path('uploads/tasks');
                 $request->task_document->move($uploadPath, $fileName);
-                $taks->task_doc = $fileName;
+                $task->task_doc = $fileName;
             }
-            $taks->save();
+            $task->save();
 
             $request->session()->flash('msg_success', 'Task successfully updated.');
             return redirect('tasks');

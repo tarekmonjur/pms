@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Project;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -19,9 +20,15 @@ class ProjectController extends Controller
     |
     */
 
+    protected $auth;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function($request, $next){
+            $this->auth = Auth::user();
+            return $next($request);
+        });
     }
 
     /**
@@ -31,18 +38,6 @@ class ProjectController extends Controller
     {
         $data['projects'] = Project::orderBy('id','desc')->get();
         return view('project.index')->with($data);
-    }
-
-
-    public function show($project)
-    {
-        $data['project'] = Project::with('tasks.comments','tasks.assignTo','tasks.assignBy')->find($project);
-        $data['tasks'] = $data['project']->tasks()
-            ->selectRaw("task_title as title, DATE_FORMAT(task_start_date, '%Y,%m,%d') as start, DATE_FORMAT(task_end_date, '%Y,%m,%d') as end, 
-            (CASE WHEN task_status = 'pending' THEN '#f39c12' WHEN task_status = 'progress' THEN '#00c0ef' WHEN task_status = 'postponed' THEN '#f56954' WHEN task_status = 'done' THEN '#00a65a' END) as backgroundColor")
-            ->get()->toJson();
-//        dd($data['tasks']);
-        return view('project.show')->with($data);
     }
 
 
@@ -58,7 +53,7 @@ class ProjectController extends Controller
            'project_title' => 'required|max:255',
            'project_start_date' => 'required|date_format:Y-m-d',
            'project_end_date' => 'required|date_format:Y-m-d',
-            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,ppt|max:4000',
+            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
             'project_status' => 'required',
         ]);
         try {
@@ -74,6 +69,7 @@ class ProjectController extends Controller
                 $request->project_document->move($uploadPath, $fileName);
                 $project->project_doc = $fileName;
             }
+            $project->created_by = $this->auth->id;
             $project->save();
 
             $request->session()->flash('msg_success', 'Project successfully added.');
@@ -82,6 +78,40 @@ class ProjectController extends Controller
             $request->session()->flash('msg_error', 'Project not added.');
             return redirect()->back();
         }
+    }
+
+
+    public function show($project)
+    {
+        $data['project'] = Project::with('tasks')->find($project);
+//        $data['tasks'] = $data['project']->tasks()
+//            ->selectRaw("task_title as title, DATE_FORMAT(task_start_date, '%Y,%m,%d') as start, DATE_FORMAT(task_end_date, '%Y,%m,%d') as end,
+//            (CASE WHEN task_status = 'pending' THEN '#f39c12' WHEN task_status = 'progress' THEN '#00c0ef' WHEN task_status = 'postponed' THEN '#f56954' WHEN task_status = 'done' THEN '#00a65a' END) as backgroundColor")
+//            ->get()->toJson();
+        $tasks = [];
+        foreach($data['project']->tasks as $task){
+            $background = "";
+            if($task->task_status == "pending"){
+                $background = "#f39c12";
+            }elseif($task->task_status == "progress"){
+                $background = "#00c0ef";
+            }elseif($task->task_status == "postponed"){
+                $background = "#f56954";
+            }elseif($task->task_status == "done"){
+                $background = "#00a65a";
+            }
+            $tasks[] = [
+                'title' => $task->task_title,
+                'start' => $task->task_start_date,
+                'end' => $task->task_end_date,
+                'backgroundColor' => $background,
+                'task_id' => $task->id,
+                'className' => 'task_event'
+            ];
+        }
+//        dd($tasks);
+        $data['tasks'] = json_encode($tasks);
+        return view('project.show')->with($data);
     }
 
 
@@ -98,7 +128,7 @@ class ProjectController extends Controller
             'project_title' => 'required|max:255',
             'project_start_date' => 'required|date_format:Y-m-d',
             'project_end_date' => 'required|date_format:Y-m-d',
-            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,ppt|max:4000',
+            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
             'project_status' => 'required',
         ]);
 
