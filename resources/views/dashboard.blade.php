@@ -132,15 +132,15 @@
                                 @foreach($projects as $project)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td><a target="_blank" href="{{url('projects/'.$project->id)}}">{{$project->project_title}}</a></td>
+                                    <td><a href="{{url('projects/'.$project->id)}}">{{$project->project_title}}</a></td>
                                     <td>Start - {{$project->project_start_date}} <br> End - {{$project->project_end_date}}</td>
                                     <td>
-                                        <label class="label @if($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">{{$project->project_status}}</label>
+                                        <label class="label @if($project->project_status == "initiate") label-primary @elseif($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">{{$project->project_status}}</label>
                                     </td>
                                     <td><label class="label label-warning">{{$project->tasks->where('task_status','pending')->count()}}</label></td>
                                     <td><label class="label label-info">{{$project->tasks->where('task_status','progress')->count()}}</label></td>
                                     <td><label class="label label-danger">{{$project->tasks->where('task_status','postponed')->count()}}</label></td>
-                                    <td><label class="label label-success">{{$project->tasks->where('task_status','done ')->count()}}</label></td>
+                                    <td><label class="label label-success">{{$project->tasks->where('task_status','done')->count()}}</label></td>
                                     <td><label class="label label-primary">{{$project->tasks->count()}}</label></td>
                                 </tr>
                                 @endforeach

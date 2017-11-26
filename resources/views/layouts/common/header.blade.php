@@ -12,9 +12,11 @@
             <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li @if($menu == '') class="active" @endif ><a href="{{url('/')}}">Dashboard<span class="sr-only">(current)</span></a></li>
-                    <li @if($menu == 'projects') class="active" @endif ><a href="{{url('/projects')}}">Manage Projects</a></li>
-                    <li @if($menu == 'tasks') class="active" @endif ><a href="{{url('/tasks')}}">Manage Tasks</a></li>
-                    <li @if($menu == 'users') class="active" @endif ><a href="{{url('/users')}}">Manage User</a></li>
+                    <li @if($menu == 'projects') class="active" @endif ><a href="{{url('/projects')}}">Projects</a></li>
+                    <li @if($menu == 'tasks') class="active" @endif ><a href="{{url('/tasks')}}">Tasks</a></li>
+                    <li @if($menu == 'users') class="active" @endif ><a href="{{url('/users')}}">Users</a></li>
+                    <li @if($menu == 'company') class="active" @endif ><a href="{{url('/company')}}">Companies</a></li>
+                    <li @if($menu == 'department') class="active" @endif ><a href="{{url('/department')}}">Department</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->

@@ -44,7 +44,24 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <div class="form-group {{ $errors->has('user_type') ? ' has-error' : '' }}">
+                                        <label for="department_name">Department Name</label>
+                                        <select name="department_name" id="department_name" class="form-control">
+                                            <option value="">--- Select Department Name ---</option>
+                                            @foreach($departments as $department)
+                                                <option value="{{$department->id}}" @if($department->id == $user->department_id) selected @endif>{{$department->department_name}} ( {{$department->company->company_name}} )</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('department_name'))
+                                            <span class="help-block">
+                                        <strong>{{ $errors->first('department_name') }}</strong>
+                                    </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('designation') ? ' has-error' : '' }}">
                                         <label for="designation">Designation</label>
                                         <input type="text" class="form-control" name="designation" value="{{ (old('designation'))?:$user->designation }}" autofocus placeholder="Enter designation">
@@ -56,7 +73,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('mobile_no') ? ' has-error' : '' }}">
                                         <label for="mobile_no">Mobile No</label>
                                         <input type="text" class="form-control" name="mobile_no" value="{{ (old('mobile_no'))?:$user->mobile_no }}" autofocus placeholder="Enter mobile no">

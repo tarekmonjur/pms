@@ -31,11 +31,11 @@
                     @foreach($projects as $project)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td><a target="_blank" href="{{url('projects/'.$project->id)}}">{{$project->project_title}}</a></td>
+                            <td><a href="{{url('projects/'.$project->id)}}">{{$project->project_title}}</a></td>
                             <td>{{$project->project_start_date}}</td>
                             <td>{{$project->project_end_date}}</td>
                             <td>
-                                <label class="label @if($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">{{$project->project_status}}</label>
+                                <label class="label @if($project->project_status == "initiate") label-primary @elseif($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">{{$project->project_status}}</label>
                             </td>
                             <td>@if($project->project_doc)<a target="_blank" href="{{asset('uploads/projects/'.$project->project_doc)}}">view doc</a>@else No doc @endif</td>
                             <td>{{$project->project_details}}</td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\Models\Project;
+use App\Models\Story;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +74,7 @@ class ProjectController extends Controller
             $project->save();
 
             $request->session()->flash('msg_success', 'Project successfully added.');
-            return redirect('projects');
+            return redirect()->back();
         }catch(\Exception $e){
             $request->session()->flash('msg_error', 'Project not added.');
             return redirect()->back();
@@ -83,7 +84,7 @@ class ProjectController extends Controller
 
     public function show($project)
     {
-        $data['project'] = Project::with('tasks')->find($project);
+        $data['project'] = Project::with('tasks', 'stories')->find($project);
 //        $data['tasks'] = $data['project']->tasks()
 //            ->selectRaw("task_title as title, DATE_FORMAT(task_start_date, '%Y,%m,%d') as start, DATE_FORMAT(task_end_date, '%Y,%m,%d') as end,
 //            (CASE WHEN task_status = 'pending' THEN '#f39c12' WHEN task_status = 'progress' THEN '#00c0ef' WHEN task_status = 'postponed' THEN '#f56954' WHEN task_status = 'done' THEN '#00a65a' END) as backgroundColor")
@@ -117,6 +118,19 @@ class ProjectController extends Controller
 
     public function edit(Request $request)
     {
+        if($request->ajax()){
+            if($request->project) {
+                $stories = Story::where('project_id', $request->project)->get();
+                $html = "<option value=''>--- Select Story ---</option>";
+                foreach ($stories as $story) {
+                    $html .= "<option value=".$story->id.">".$story->story_title."</option>";
+                }
+            }else{
+                $html = "<option value=''>--- No Story Found---</option>";
+            }
+            return $html;
+        }
+
         $data['project'] = Project::find($request->project);
         return view('project.edit')->with($data);
     }
@@ -148,7 +162,7 @@ class ProjectController extends Controller
             $project->save();
 
             $request->session()->flash('msg_success', 'Project successfully updated.');
-            return redirect('projects');
+            return redirect()->back();
         }catch (\Exception $e){
             $request->session()->flash('msg_error', 'Project not updated.');
             return redirect()->back();

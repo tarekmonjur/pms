@@ -31,13 +31,13 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('project_name') ? ' has-error' : '' }}">
                                         <label for="project_name">Project Name</label>
                                         <select name="project_name" id="project_name" class="form-control">
                                             <option value="">--- Select Project ---</option>
                                             @foreach($projects as $project)
-                                                <option value="{{$project->id}}">{{$project->project_title}}</option>
+                                                <option value="{{$project->id}}" @if($project->id == $project_id) selected @endif>{{$project->project_title}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('project_name'))
@@ -47,14 +47,30 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <div class="form-group {{ $errors->has('project_name') ? ' has-error' : '' }}">
+                                        <label for="story_name">Story Name</label>
+                                        <select name="story_name" id="story_name" class="form-control">
+                                            <option value="">--- Select Story ---</option>
+                                            @foreach($stories as $story)
+                                                <option value="{{$story->id}}" @if($story->id == $story_id) selected @endif>{{$story->story_title}}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('story_name'))
+                                            <span class="help-block">
+                                        <strong>{{ $errors->first('story_name') }}</strong>
+                                    </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_type') ? ' has-error' : '' }}">
                                         <label for="task_type">Task Type</label>
                                         <select name="task_type" id="task_type" class="form-control">
                                             <option value="">--- Select Task Type ---</option>
-                                            <option value="task">Task</option>
-                                            <option value="bug">Bug</option>
-                                            <option value="issue">Issue</option>
+                                            <option value="task" @if(old('task_type') == "task") selected @endif>Task</option>
+                                            <option value="bug" @if(old('task_type') == "bug") selected @endif>Bug</option>
+                                            <option value="issue" @if(old('task_type') == "issue") selected @endif>Issue</option>
                                         </select>
                                         @if ($errors->has('task_type'))
                                             <span class="help-block">
@@ -96,10 +112,10 @@
                                         <label for="task_status">Task Status</label>
                                         <select name="task_status" id="task_type" class="form-control">
                                             <option value="">--- Select Task Status ---</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="progress">In Progress</option>
-                                            <option value="postponed">Postponed</option>
-                                            <option value="done">Done</option>
+                                            <option value="pending" @if(old('task_type') == "pending") selected @endif>Pending</option>
+                                            <option value="progress" @if(old('task_type') == "progress") selected @endif>In Progress</option>
+                                            <option value="postponed" @if(old('task_type') == "postponed") selected @endif>Postponed</option>
+                                            <option value="done" @if(old('task_type') == "done") selected @endif>Done</option>
                                         </select>
                                         @if ($errors->has('task_status'))
                                             <span class="help-block">
@@ -180,4 +196,28 @@
         </div>
     </section>
 
+@endsection
+
+
+@section('script')
+    <script>
+        $(function(){
+            $(document).on("change", "#project_name", function(){
+                var project_id = $(this).val();
+                project_id = (project_id)?project_id:0;
+                $.ajax({
+                    url: baseUrl+'/projects/'+project_id+'/edit',
+                    type: 'get',
+                    dataType: 'html',
+                    success:function (data) {
+                        $("#story_name").html(data);
+                    },
+                    error: function (error) {
+                        $("#story_name").html("<option>Connection Problem.</option>");
+                    }
+                });
+            });
+
+        });
+    </script>
 @endsection

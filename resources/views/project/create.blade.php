@@ -73,6 +73,7 @@
                                         <label for="project_status">Project Status</label>
                                         <select name="project_status" id="project_status" class="form-control">
                                             <option value="">--- Select Project Status ---</option>
+                                            <option value="initiate" @if(old('project_status') == "initiate") selected @endif>Initiate</option>
                                             <option value="pending" @if(old('project_status') == "pending") selected @endif>Pending</option>
                                             <option value="progress" @if(old('project_status') == "progress") selected @endif>Progress</option>
                                             <option value="done" @if(old('project_status') == "done") selected @endif>Done</option>

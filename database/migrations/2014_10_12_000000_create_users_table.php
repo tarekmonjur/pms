@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email',45)->unique();
             $table->string('password',100);
             $table->rememberToken();
+            $table->integer('department_id')->unsigned();
             $table->string('designation',100)->nullable();
             $table->string('mobile_no',11)->nullable();
             $table->enum('user_type', ['employee', 'admin', 'director'])->nullable();
@@ -39,6 +40,9 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign('users_department_id_foreign');
+        });
         Schema::dropIfExists('users');
     }
 }

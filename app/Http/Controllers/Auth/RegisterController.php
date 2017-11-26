@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Department;
 use App\Models\User;
 
 use Validator;
@@ -52,7 +53,8 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showRegister(){
-        return view('user.create');
+        $data['departments'] = Department::with('company')->get();
+        return view('user.create')->with($data);
     }
 
 
@@ -68,6 +70,7 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(),[
             'first_name' => 'required|max:45|min:3|alpha_spaces',
             'last_name' => 'required|max:45|min:3|alpha_spaces',
+            'department_name' => 'required',
             'designation' => 'required|max:45|min:3|alpha_spaces_dot',
             'email' => 'required|email|max:100|unique:users',
             'password' => 'required|min:6|max:20',
@@ -87,6 +90,8 @@ class RegisterController extends Controller
                 $request->image->move($upload_path, $photo_name);
                 $request->offsetSet('photo', $photo_name);
             }
+            $request->offsetSet('department_id', $request->department_name);
+            $request->offsetUnset('department_name');
             User::create($request->all());
             $request->session()->flash('msg_success','User create success.');
         }catch(\Exception $e){

@@ -21,6 +21,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'email' => 'tarek@gmail.com',
         'password' => 123456,
         'remember_token' => '',
+        'department_id' => 1,
         'designation' => $faker->title,
         'mobile_no' => '01832308565',
         'user_type' => 'admin',

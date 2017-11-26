@@ -15,7 +15,7 @@
                 <i class="fa fa-envelope @if($task->task_status == "done") bg-green @elseif($task->task_status == "pending") bg-yellow @elseif($task->task_status == "progress") bg-aqua @elseif($task->task_status == "postponed") bg-red @endif"></i>
                 <div class="timeline-item">
                     {{--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>--}}
-                    <h3 class="timeline-header">Assign By - <a>{{$task->assignTo->fullname}}</a>, Assign To - <a>{{$task->assignTo->fullname}}</a></h3>
+                    <h3 class="timeline-header">Assign By - <a>{{$task->assignTo->fullname or '---'}}</a>, Assign To - <a>{{$task->assignTo->fullname or '---'}}</a></h3>
                     <div class="timeline-body">{{$task->task_details}}</div>
                 </div>
             </li>

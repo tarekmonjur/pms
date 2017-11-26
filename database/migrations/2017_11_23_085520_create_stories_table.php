@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProjectsTable extends Migration
+class CreateStoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('stories', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('project_title');
-            $table->string('project_doc')->nullable();
-            $table->date('project_start_date')->nullable();
-            $table->date('project_end_date')->nullable();
-            $table->enum('project_status', ['initiate','pending', 'progress', 'done']);
-            $table->text('project_details')->nullable();
+            $table->integer('project_id')->unsigned();
+            $table->string('story_title');
+            $table->enum('story_status', ['pending', 'progress', 'postponed', 'done']);
+            $table->text('story_details');
             $table->integer('created_by')->unsigned()->default(0);
             $table->integer('updated_by')->unsigned()->default(0);
             $table->timestamps();
+
         });
     }
 
@@ -34,6 +33,9 @@ class CreateProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::table('stories', function (Blueprint $table) {
+            $table->dropForeign('stories_project_id_foreign');
+        });
+        Schema::dropIfExists('stories');
     }
 }

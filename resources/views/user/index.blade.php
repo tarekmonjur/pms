@@ -22,6 +22,7 @@
                             <th>SL</th>
                             <th>Full Name</th>
                             <th>Email Address</th>
+                            <th>Department</th>
                             <th>Designation</th>
                             <th>Mobile No</th>
                             <th>User Type</th>
@@ -38,6 +39,7 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$user->fullname}}</td>
                                 <td>{{$user->email}}</td>
+                                <td>{{$user->department->department_name}} <br> ( {{$user->department->company->company_name}} )</td>
                                 <td>{{$user->designation}}</td>
                                 <td>{{$user->mobile_no}}</td>
                                 <td><label class="label label-info">{{$user->userrole}}</label></td>
@@ -59,6 +61,7 @@
                             <th>SL</th>
                             <th>Full Name</th>
                             <th>Email Address</th>
+                            <th>Department</th>
                             <th>Designation</th>
                             <th>Mobile No</th>
                             <th>User Type</th>

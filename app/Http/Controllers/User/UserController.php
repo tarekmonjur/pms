@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Department;
 use App\Models\User;
 
 use Illuminate\Support\Facades\File;
@@ -29,14 +30,14 @@ class UserController extends Controller
 
     public function __invoke()
     {
-        $data['users'] = User::orderBy('id','desc')->get();
+        $data['users'] = User::with('department')->orderBy('id','desc')->get();
         return view('user.index')->with($data);
     }
 
 
     public function edit($id){
         $data['user'] = User::find($id);
-//        dd($data['user']);
+        $data['departments'] = Department::with('company')->get();
         return view('user.edit')->with($data);
     }
 
@@ -46,6 +47,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(),[
             'first_name' => 'required|max:45|min:3|alpha_spaces',
             'last_name' => 'required|max:45|min:3|alpha_spaces',
+            'department_name' => 'required',
             'designation' => 'required|max:45|min:3|alpha_spaces_dot',
             'email' => 'required|email|max:100|unique:users,id,'.$request->id,
             'password' => 'nullable|min:6|max:20',
@@ -76,7 +78,8 @@ class UserController extends Controller
             if(empty($request->password)){
                $request->offsetUnset('password');
             }
-
+            $request->offsetSet('department_id', $request->department_name);
+            $request->offsetUnset('department_name');
             $user->update($request->all());
             $request->session()->flash('msg_success', 'User successfully updated.');
             return redirect('users');

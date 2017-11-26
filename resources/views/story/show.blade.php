@@ -23,17 +23,17 @@
                         <h4 class="box-title">Project Stories List</h4>
                     </div>
                     <div class="list-group">
-                        @foreach($project->stories as $story)
-                            <a href="{{url('stories/'.$story->id)}}" style="color: #fff!important;">
-                                <div  class="list-group-item list-group-item-action flex-column align-items-start @if($story->story_status == "done") bg-green @elseif($story->story_status == "pending") bg-yellow @elseif($story->story_status == "progress") bg-aqua @elseif($story->story_status == "postponed") bg-red @endif">
+                        @foreach($project->stories as $story_info)
+                            <a href="{{url('stories/'.$story_info->id)}}" style="color: #fff!important;">
+                                <div  class="list-group-item list-group-item-action flex-column align-items-start @if($story_info->story_status == "done") bg-green @elseif($story_info->story_status == "pending") bg-yellow @elseif($story_info->story_status == "progress") bg-aqua @elseif($story_info->story_status == "postponed") bg-red @endif">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1" style="font-weight: bold">{{$loop->iteration.'. '.$story->story_title}}</h5>
+                                        <h5 class="mb-1" style="font-weight: bold">{{$loop->iteration.'. '.$story_info->story_title}}</h5>
                                     </div>
-                                    <p class="mb-1">{{$story->story_details}}</p>
+                                    <p class="mb-1">{{$story_info->story_details}}</p>
                                    <div class="btn-group">
                                         <a target="_blank" href="{{url('tasks/create?project_id='.$project->id.'&story_id='.$story->id)}}" class="btn btn-default btn-xs">Create Task</a>
-                                        <a href="#" class="btn btn-default btn-xs" onclick="editStory('{{$story->id}}')">Edit</a>
-                                        <a href="#" class="btn btn-default btn-xs" onclick="storyDelete('{{$story->id}}')">Delete</a>
+                                        <a href="#" class="btn btn-default btn-xs" onclick="editStory('{{$story_info->id}}')">Edit</a>
+                                        <a href="#" class="btn btn-default btn-xs" onclick="dataDelete('{{$story_info->id}}', '{{url('stories/'.$story_info->id)}}', 'story')">Delete</a>
                                     </div>
                                 </div>
                             </a>
@@ -44,11 +44,31 @@
 
             {{--show calender--}}
             <div class="col-md-9">
-                <div class="box box-primary">
-                    <div class="box-body no-padding">
-                        <div id="calendar"></div>
-                    </div>
+
+                <div class="list-group" style="border-radius: 0px">
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h4 style="margin: 0px">Show all task of {{$story->story_title}}</h4>
+                        </div>
+                    </a>
+
+                    @foreach($story->tasks as $task)
+                    <a style="cursor: pointer; color: #fff!important;" onclick="getTask('{{$task->id}}')">
+                        <div class="list-group-item list-group-item-action flex-column align-items-start @if($task->task_status == "done") bg-green @elseif($task->task_status == "pending") bg-yellow @elseif($task->task_status == "progress") bg-aqua @elseif($task->task_status == "postponed") bg-red @endif">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" style="font-weight: bold">{{$loop->iteration}} . {{$task->task_title}}</h5>
+                            </div>
+                            <p>{{$task->task_details}}</p>
+
+                            <div class="btn-group">
+                                <a href="{{url('tasks/'.$task->id.'/edit')}}" class="btn btn-default btn-xs">Edit</a>
+                                <a href="#" onclick="dataDelete('{{$task->id}}', '{{url('tasks/'.$task->id)}}', 'task')" class="btn btn-default btn-xs">Delete</a>
+                            </div>
+                        </div>
+                    </a>
+                    @endforeach
                 </div>
+
             </div>
         </div>
     </section>
@@ -220,9 +240,9 @@
 
 
         // delete task comments
-        function storyDelete(task_id) {
+        function dataDelete(task_id, url, msg) {
             swal({
-                title: 'Are you sure delete this story?',
+                title: 'Are you sure delete this '+msg+'?',
                 text: "You won't be able to revert this!",
                 type: 'warning',
                 showCancelButton: true,
@@ -235,7 +255,7 @@
                 buttonsStyling: false
             }).then(function () {
                 $.ajax({
-                    url: baseUrl+'/stories/'+task_id,
+                    url: url,
                     type: 'delete',
                     dataType: 'html',
                     success:function (data) {

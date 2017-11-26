@@ -11,5 +11,10 @@ class Project extends Model
         return $this->hasMany('App\Models\Task');
     }
 
+    public function stories()
+    {
+        return $this->hasMany('App\Models\Story');
+    }
+
 
 }

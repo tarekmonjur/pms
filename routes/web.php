@@ -47,10 +47,24 @@ Route::group(['prefix'=>'users'],function(){
 
 
 /*
+ * Company routes.
+ */
+Route::resource('company', 'Company\CompanyController');
+
+/*
+ * Department routes.
+ */
+Route::resource('department', 'Company\DepartmentController');
+
+/*
  * Project routes.
  */
 Route::resource('projects', 'Project\ProjectController');
 
+/*
+ * Story routes.
+ */
+Route::resource('stories', 'Project\StoryController');
 
 /*
  * Task routes.
@@ -60,8 +74,10 @@ Route::resource('tasks', 'Task\TaskController');
 /*
  * Task Comment routes.
  */
-
 Route::resource('tasks/{task}/comments', 'Task\CommentController');
+
+
+
 
 
 

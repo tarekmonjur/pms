@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','email','password','designation','mobile_no','user_type','photo','status','address'
+        'first_name','last_name','email','password','department_id','designation','mobile_no','user_type','photo','status','address'
     ];
 
     /**
@@ -65,6 +65,11 @@ class User extends Authenticatable
 
     public function getCreatedAtAttribute($value){
         return Carbon::parse($value)->format('d M Y');
+    }
+
+
+    public function department(){
+        return $this->belongsTo('App\Models\Department');
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Task;
 
 use App\Models\Project;
+use App\Models\Story;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -41,10 +42,20 @@ class TaskController extends Controller
     }
 
 
-    public function create()
+    public function create(Request $request)
     {
         $data['projects'] = Project::orderBy('id','desc')->get();
         $data['users'] = User::orderBy('id','desc')->get();
+
+        if($request->has('project_id')){
+            $data['project_id'] = $request->project_id;
+            $data['stories'] = Story::where('project_id', $request->project_id)->get();
+        }else{
+            $data['project_id'] = null;
+            $data['stories'] = [];
+        }
+        $data['story_id'] = ($request->has('story_id'))?$request->story_id:null;
+
         return view('task.create')->with($data);
     }
 
@@ -54,16 +65,18 @@ class TaskController extends Controller
         $request->validate([
             'task_title' => 'required|max:255',
             'project_name' => 'required|max:255',
+            'story_name' => 'required|max:255',
             'task_type' => 'required|max:255',
             'task_start_date' => 'required|date_format:Y-m-d',
             'task_end_date' => 'required|date_format:Y-m-d',
             'task_status' => 'required|max:255',
-            'task_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,ppt|max:4000',
+            'task_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
         ]);
         try {
             $task = new Task;
             $task->task_title = $request->task_title;
             $task->project_id = $request->project_name;
+            $task->story_id = $request->story_name;
             $task->task_type = $request->task_type;
             $task->task_start_date = $request->task_start_date;
             $task->task_end_date = $request->task_end_date;
@@ -81,7 +94,7 @@ class TaskController extends Controller
             $task->save();
 
             $request->session()->flash('msg_success', 'Task successfully added.');
-            return redirect('tasks');
+            return redirect()->back();
         }catch(\Exception $e){
             $request->session()->flash('msg_error', 'Task not added.');
             return redirect()->back();
@@ -91,7 +104,8 @@ class TaskController extends Controller
 
     public function show($task)
     {
-        $data['task'] = Task::with('comments', 'assignTo', 'assignBy')->find($task);
+        $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($task);
+//        dd($data['task']);
         return view('task.show')->with($data);
     }
 
@@ -114,7 +128,7 @@ class TaskController extends Controller
             'task_start_date' => 'required|date_format:Y-m-d',
             'task_end_date' => 'required|date_format:Y-m-d',
             'task_status' => 'required|max:255',
-            'task_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,ppt|max:4000',
+            'task_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
         ]);
 
         try{
@@ -137,7 +151,7 @@ class TaskController extends Controller
             $task->save();
 
             $request->session()->flash('msg_success', 'Task successfully updated.');
-            return redirect('tasks');
+            return redirect()->back();
         }catch (\Exception $e){
             $request->session()->flash('msg_error', 'Task not updated.');
             return redirect()->back();

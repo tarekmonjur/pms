@@ -20,9 +20,6 @@ class CreateTaskCommentsTable extends Migration
             $table->text('comments')->nullable();
             $table->string('attach')->nullable();
             $table->timestamps();
-
-            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
     }
 
@@ -33,6 +30,10 @@ class CreateTaskCommentsTable extends Migration
      */
     public function down()
     {
+        Schema::table('task_comments', function (Blueprint $table) {
+            $table->dropForeign('task_comments_task_id_foreign');
+            $table->dropForeign('task_comments_user_id_foreign');
+        });
         Schema::dropIfExists('task_comments');
     }
 }

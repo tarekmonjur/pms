@@ -16,6 +16,7 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('project_id')->unsigned();
+            $table->integer('story_id')->unsigned();
             $table->string('task_title');
             $table->enum('task_type', ['task', 'bug', 'issue']);
             $table->date('task_start_date')->nullable();
@@ -28,8 +29,6 @@ class CreateTasksTable extends Migration
             $table->integer('created_by')->unsigned()->default(0);
             $table->integer('updated_by')->unsigned()->default(0);
             $table->timestamps();
-
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 
@@ -40,6 +39,10 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropForeign('tasks_project_id_foreign');
+            $table->dropForeign('tasks_story_id_foreign');
+        });
         Schema::dropIfExists('tasks');
     }
 }
