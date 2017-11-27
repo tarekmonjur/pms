@@ -64,12 +64,12 @@ Route::resource('projects', 'Project\ProjectController');
 /*
  * Story routes.
  */
-Route::resource('stories', 'Project\StoryController');
+Route::resource('projects/{project}/stories', 'Project\StoryController');
 
 /*
  * Task routes.
  */
-Route::resource('tasks', 'Task\TaskController');
+Route::resource('projects/{project}/stories/{story}/tasks', 'Task\TaskController');
 
 /*
  * Task Comment routes.

@@ -11,6 +11,11 @@ class Task extends Model
         return $this->belongsTo('App\Models\Project');
     }
 
+    public function story()
+    {
+        return $this->belongsTo('App\Models\Story');
+    }
+
     public function assignBy()
     {
         return $this->belongsTo('App\Models\User', 'assign_by', 'id');

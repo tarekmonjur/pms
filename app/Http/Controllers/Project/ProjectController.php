@@ -84,34 +84,32 @@ class ProjectController extends Controller
 
     public function show($project)
     {
-        $data['project'] = Project::with('tasks', 'stories')->find($project);
-//        $data['tasks'] = $data['project']->tasks()
-//            ->selectRaw("task_title as title, DATE_FORMAT(task_start_date, '%Y,%m,%d') as start, DATE_FORMAT(task_end_date, '%Y,%m,%d') as end,
-//            (CASE WHEN task_status = 'pending' THEN '#f39c12' WHEN task_status = 'progress' THEN '#00c0ef' WHEN task_status = 'postponed' THEN '#f56954' WHEN task_status = 'done' THEN '#00a65a' END) as backgroundColor")
-//            ->get()->toJson();
-        $tasks = [];
-        foreach($data['project']->tasks as $task){
+        $data['project'] = Project::with('stories','tasks')->find($project);
+        $calender_stories =  $data['project']->tasks()->with('story')->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")->groupBy('story_id')->get();
+
+        $calender_story = [];
+        foreach($calender_stories as $story){
             $background = "";
-            if($task->task_status == "pending"){
+            if($story->story->story_status == "pending"){
                 $background = "#f39c12";
-            }elseif($task->task_status == "progress"){
+            }elseif($story->story->story_status == "progress"){
                 $background = "#00c0ef";
-            }elseif($task->task_status == "postponed"){
+            }elseif($story->story->story_status == "postponed"){
                 $background = "#f56954";
-            }elseif($task->task_status == "done"){
+            }elseif($story->story->story_status == "done"){
                 $background = "#00a65a";
             }
-            $tasks[] = [
-                'title' => $task->task_title,
-                'start' => $task->task_start_date,
-                'end' => $task->task_end_date,
+            $calender_story[] = [
+                'title' => $story->story->story_title,
+                'start' => $story->start_date,
+                'end' => $story->end_date,
                 'backgroundColor' => $background,
-                'task_id' => $task->id,
-                'className' => 'task_event'
+                'story_id' => $story->story_id,
+                'url' => url('projects/'.$project.'/stories/'.$story->story_id)
             ];
         }
-//        dd($tasks);
-        $data['tasks'] = json_encode($tasks);
+
+        $data['calender_story'] = json_encode($calender_story);
         return view('project.show')->with($data);
     }
 

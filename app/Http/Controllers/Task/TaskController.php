@@ -35,9 +35,9 @@ class TaskController extends Controller
     }
 
 
-    public function index()
+    public function index($story)
     {
-        $data['tasks'] = Task::with('project', 'assignBy', 'assignTo')->orderBy('id','desc')->get();
+        $data['stories'] = Story::with('project','tasks','tasks.assignBy', 'tasks.assignTo')->find($story);
         return view('task.index')->with($data);
     }
 

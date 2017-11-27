@@ -5,7 +5,7 @@
         </button>
         <h4 class="modal-title">Project Story</h4>
     </div>
-    <form id="edit_story_form" method="post" action="{{url('stories/'.$story->id)}}">
+    <form id="edit_story_form" method="post" action="{{url('projects/'.$story->project_id.'/stories/'.$story->id)}}">
         <input type="hidden" value="{{$story->project_id}}" name="project_id">
         <div class="modal-body">
             {{csrf_field()}}

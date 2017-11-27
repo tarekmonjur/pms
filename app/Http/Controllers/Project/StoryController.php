@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\Models\Story;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -32,11 +33,17 @@ class StoryController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function index()
+    {
+
+    }
+
+
+    public function store(Request $request, $project)
     {
         try {
             $story = new Story;
-            $story->project_id = $request->project_id;
+            $story->project_id = $project;
             $story->story_title = $request->story_title;
             $story->story_status = $request->story_status;
             $story->story_details = $request->story_details;
@@ -52,12 +59,14 @@ class StoryController extends Controller
     }
 
 
-    public function show($story)
+    public function show($project, $story)
     {
-        $data['story'] = Story::with('project','tasks')->find($story);
-        $data['project'] = $data['story']->project;
+        $data['story'] = Story::with('project','tasks','tasks.assignBy', 'tasks.assignTo')->find($story);
+        $story_start_end =  $data['story']->tasks()->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")->groupBy('story_id')->first();
+        $data['story_start'] = $story_start_end->start_date;
+        $data['story_end'] = $story_start_end->end_date;
 
-        $tasks = [];
+        $calender_tasks = [];
         foreach($data['story']->tasks as $task){
             $background = "";
             if($task->task_status == "pending"){
@@ -69,7 +78,7 @@ class StoryController extends Controller
             }elseif($task->task_status == "done"){
                 $background = "#00a65a";
             }
-            $tasks[] = [
+            $calender_tasks[] = [
                 'title' => $task->task_title,
                 'start' => $task->task_start_date,
                 'end' => $task->task_end_date,
@@ -78,13 +87,12 @@ class StoryController extends Controller
                 'className' => 'task_event'
             ];
         }
-        $data['tasks'] = json_encode($tasks);
-//        dd($data);
+        $data['calender_tasks'] = json_encode($calender_tasks);
         return view('story.show')->with($data);
     }
 
 
-    public function edit(Request $request, $story)
+    public function edit($project, $story)
     {
         $data['story'] = Story::find($story);
         return view('story.edit')->with($data);

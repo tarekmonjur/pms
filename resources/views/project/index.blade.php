@@ -42,8 +42,8 @@
                             <td>{{$project->created_at->format('Y-m-d')}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-success" href="{{url('projects/'.$project->id.'/edit')}}">Edit</a>
-                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this project?', 'delete_{{$project->id}}')" class="btn btn-sm btn-danger" href="#">Delete</a>
+                                    <a class="btn btn-xs btn-success" href="{{url('projects/'.$project->id.'/edit')}}">Edit</a>
+                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this project?', 'delete_{{$project->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
                                     <form method="post" action="{{url('projects/'.$project->id)}}" id="delete_{{$project->id}}">
                                         {{csrf_field()}}
                                         {{method_field('delete')}}
