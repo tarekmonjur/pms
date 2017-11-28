@@ -35,9 +35,14 @@ class TaskController extends Controller
     }
 
 
-    public function index($story)
+    public function index($project,$story)
     {
-        $data['stories'] = Story::with('project','tasks','tasks.assignBy', 'tasks.assignTo')->find($story);
+        $data['tasks'] = Task::with('project','story','assignBy', 'assignTo')
+            ->where('project_id', $project)
+            ->where('story_id', $story)
+            ->get();
+        $data['project_id'] = $project;
+        $data['story_id'] = $story;
         return view('task.index')->with($data);
     }
 
@@ -47,14 +52,14 @@ class TaskController extends Controller
         $data['projects'] = Project::orderBy('id','desc')->get();
         $data['users'] = User::orderBy('id','desc')->get();
 
-        if($request->has('project_id')){
-            $data['project_id'] = $request->project_id;
-            $data['stories'] = Story::where('project_id', $request->project_id)->get();
+        if(!empty($request->project)){
+            $data['project_id'] = $request->project;
+            $data['stories'] = Story::where('project_id', $request->project)->get();
         }else{
             $data['project_id'] = null;
             $data['stories'] = [];
         }
-        $data['story_id'] = ($request->has('story_id'))?$request->story_id:null;
+        $data['story_id'] = (!empty($request->story))?$request->story:null;
 
         return view('task.create')->with($data);
     }
@@ -102,9 +107,12 @@ class TaskController extends Controller
     }
 
 
-    public function show($task)
+    public function show(Request $request)
     {
-        $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($task);
+        $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')
+            ->where('project_id', $request->project)
+            ->where('story_id', $request->story)
+            ->find($request->task);
 //        dd($data['task']);
         return view('task.show')->with($data);
     }

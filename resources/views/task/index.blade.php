@@ -5,7 +5,7 @@
         <h1>
             Manage Tasks
             <small> show all project tasks.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/tasks/create')}}"> Create Task</a>
+            <a class="btn btn-primary pull-right" href="{{url('/projects/'.$project_id.'/stories/'.$story_id.'/tasks/create')}}"> Create Task</a>
         </h1>
     </section>
 
@@ -18,6 +18,7 @@
                         <th>SL</th>
                         <th>Task Title</th>
                         <th>Project</th>
+                        <th>Story</th>
                         <th>Type</th>
                         <th>Start/End Date</th>
                         <th>Status</th>
@@ -36,6 +37,7 @@
                             <td>{{$loop->iteration}}</td>
                             <td>{{$task->task_title}}</td>
                             <td>{{$task->project->project_title}}</td>
+                            <td>{{$task->story->story_title}}</td>
                             <td>
                                 <label class="label @if($task->task_type == "task") label-info @elseif($task->task_type == "bug") label-danger @elseif($task->task_type == "issue") label-warning @endif">{{$task->task_type}}</label>
                             </td>
@@ -50,9 +52,9 @@
                             <td>{{$task->created_at->format('Y-m-d')}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-success" href="{{url('tasks/'.$task->id.'/edit')}}">Edit</a>
-                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_{{$task->id}}')" class="btn btn-sm btn-danger" href="#">Delete</a>
-                                    <form method="post" action="{{url('tasks/'.$task->id)}}" id="delete_{{$task->id}}">
+                                    <a class="btn btn-xs btn-success" href="{{url('tasks/'.$task->id.'/edit')}}">Edit</a>
+                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_{{$task->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
+                                    <form method="post" action="{{url('projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}" id="delete_{{$task->id}}">
                                         {{csrf_field()}}
                                         {{method_field('delete')}}
                                     </form>

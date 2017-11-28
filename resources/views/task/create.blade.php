@@ -5,7 +5,7 @@
         <h1>
             Create Task
             <small> task create form.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/tasks')}}"> View Tasks</a>
+            <a class="btn btn-primary pull-right" href="{{url('/projects/'.$project_id.'/stories/'.$story_id.'/tasks')}}"> View Tasks</a>
         </h1>
     </section>
 
@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
-                    <form role="form" method="post" action="{{url('tasks')}}" enctype="multipart/form-data">
+                    <form role="form" method="post" action="{{url('/projects/'.$project_id.'/stories/'.$story_id.'/tasks')}}" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="box-body">
                             <div class="row">
@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('project_name') ? ' has-error' : '' }}">
                                         <label for="project_name">Project Name</label>
                                         <select name="project_name" id="project_name" class="form-control">
@@ -47,7 +47,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('project_name') ? ' has-error' : '' }}">
                                         <label for="story_name">Story Name</label>
                                         <select name="story_name" id="story_name" class="form-control">
@@ -63,6 +63,9 @@
                                         @endif
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_type') ? ' has-error' : '' }}">
                                         <label for="task_type">Task Type</label>
@@ -79,10 +82,7 @@
                                         @endif
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_start_date') ? ' has-error' : '' }}">
                                         <label for="task_start_date">Task Start Date</label>
                                         <input type="text" class="form-control datepicker" name="task_start_date" value="{{ old('task_start_date') }}" placeholder="Enter Task Start Date">
@@ -93,7 +93,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_end_date') ? ' has-error' : '' }}">
                                         <label for="task_end_date">Task End Date</label>
                                         <input type="text" class="form-control datepicker" name="task_end_date" value="{{ old('task_end_date') }}" placeholder="Enter Task End Date">

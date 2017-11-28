@@ -46,7 +46,7 @@
                     <h3 class="timeline-header"><a>{{$comment->user->fullname}}</a></h3>
 
                     <div class="timeline-body">
-                        <form id="comment_update_{{$comment->id}}" onsubmit="return commentUpdate('#comment_update_{{$comment->id}}')" enctype="multipart/form-data">
+                        <form id="comment_update_{{$comment->id}}" onsubmit="return commentUpdate(event)" enctype="multipart/form-data">
                             {{method_field('put')}}
                             <input type="hidden" name="comment_id" value="{{$comment->id}}">
                             <input type="hidden" name="task_id" value="{{$task->id}}">

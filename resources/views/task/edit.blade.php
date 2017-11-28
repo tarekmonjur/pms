@@ -5,7 +5,7 @@
         <h1>
             Edit Task
             <small> task update form.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/tasks')}}"> View Tasks</a>
+            <a class="btn btn-primary pull-right" href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks')}}"> View Tasks</a>
         </h1>
     </section>
 
@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
-                    <form role="form" method="post" action="{{url('tasks/'.$task->id)}}" enctype="multipart/form-data">
+                    <form role="form" method="post" action="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}" enctype="multipart/form-data">
                         {{csrf_field()}}
                         {{method_field('put')}}
                         <div class="box-body">

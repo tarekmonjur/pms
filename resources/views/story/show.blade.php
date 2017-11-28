@@ -1,6 +1,12 @@
 @extends('layouts.layout')
 @section('content')
 
+    <style>
+        .comment_edit{display: none;}
+        .task_event{cursor: pointer; padding: 5px;}
+        label.error{color:red;}
+    </style>
+
     <section class="content-header">
         <h1>
             {{$story->story_title}}
@@ -23,7 +29,7 @@
                         <div class="tab-pane active" id="story">
                             <div class="box-body no-padding">
                                 <div class="list-group">
-                                    <div  class="list-group-item list-group-item-action flex-column align-items-start @if($story->story_status == "initiate") label-primary @elseif($story->story_status == "pending") label-warning @elseif($story->story_status == "progress") label-info @elseif($story->story_status == "done") label-success @endif">
+                                    <div  class="list-group-item list-group-item-action flex-column align-items-start @if($story->story_status == "postponed") label-danger @elseif($story->story_status == "pending") label-warning @elseif($story->story_status == "progress") label-info @elseif($story->story_status == "done") label-success @endif">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h4 class="mb-1" style="font-weight: bold">{{$story->story_title}}</h4>
                                         </div>
@@ -88,9 +94,9 @@
                                                 <td>{{$task->created_at->format('Y-m-d')}}</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a class="btn btn-xs btn-success" href="{{url('tasks/'.$task->id.'/edit')}}">Edit</a>
+                                                        <a class="btn btn-xs btn-success" href="{{url('projects/'.$story->project_id.'/stories/'.$story->id.'/tasks/'.$task->id.'/edit')}}">Edit</a>
                                                         <a onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_{{$task->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
-                                                        <form method="post" action="{{url('tasks/'.$task->id)}}" id="delete_{{$task->id}}">
+                                                        <form method="post" action="{{url('projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}" id="delete_{{$task->id}}">
                                                             {{csrf_field()}}
                                                             {{method_field('delete')}}
                                                         </form>
@@ -139,12 +145,19 @@
         <div class="modal-dialog" role="document" id="edit_story"></div>
     </div>
 
+    {{--show task comment--}}
+    <div class="modal" id="modal-default">
+        <div class="modal-dialog" id="task_body"></div>
+    </div>
+
 @endsection
 
 @section('script')
     <script src="{{asset('js/jquery-validate-1.17.0.js')}}"></script>
     <script>
         var baseUrl = '{{url('/')}}';
+        var project_id = <?php echo $story->project_id;?>;
+        var story_id = <?php echo $story->id;?>;
 
         $.ajaxSetup({
             headers: {
@@ -172,9 +185,122 @@
             return false;
         }
 
+
+        // get task comments and show popup
+        function getTask(project_id, story_id, task_id) {
+            $.ajax({
+                url: baseUrl+'/projects/'+project_id+'/stories/'+story_id+'/tasks/'+task_id,
+                type: 'get',
+                dataType: 'html',
+                success:function (data) {
+                    $("#task_body").html(data);
+                    $('#modal-default').modal();
+                },
+                error: function (error) {
+                    $("#task_body").html("<h2>Connection Problem.</h2>");
+                }
+            });
+        }
+
+        // show edit task comment
+        function commentEdit(comment_id) {
+            $("#comment_"+comment_id).hide();
+            $("#comment_edit_"+comment_id).show();
+        }
+
+        // cancel task comment edit
+        function commentCancel(comment_id) {
+            $("#comment_"+comment_id).show();
+            $("#comment_edit_"+comment_id).hide();
+        }
+
+
+        // update task comments
+        function commentUpdate(event) {
+            var formData = new FormData(event.target);
+            event.preventDefault();
+
+            $.ajax({
+                url: baseUrl + '/tasks/' + 0 + '/comments/' + 0,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                dataType: 'html',
+                data: formData,
+                success: function (data) {
+                    $("#task_body").html(data);
+                },
+                error: function (error) {
+                    $("#task_body").html("<h2>Connection Problem.</h2>");
+                }
+            });
+
+            return false;
+        }
+
+        // delete task comments
+        function commentDelete(task_id, comment_id) {
+            swal({
+                title: 'Are you sure delete this comment?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#218838',
+                cancelButtonColor: '#c82333',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false
+            }).then(function () {
+                $.ajax({
+                    url: baseUrl+'/tasks/'+task_id+'/comments/'+comment_id,
+                    type: 'delete',
+                    dataType: 'html',
+                    success:function (data) {
+                        $("#task_body").html(data);
+                    },
+                    error: function (error) {
+                        $("#task_body").html("<h2>Connection Problem.</h2>");
+                    }
+                });
+            }, function (dismiss) {
+                if (dismiss === 'cancel') {
+                    swal(
+                        'Cancelled',
+                        'your stuff is safe.',
+                        'error'
+                    )
+                }
+            });
+        }
+
         var task_calender = <?php echo $calender_tasks;?>
 
         $(function () {
+
+            // add task comments
+            $(document).on("submit","#add_comment", function(e){
+                e.preventDefault();
+                var form = document.querySelector("#add_comment");
+                var formData = new FormData(form);
+//                console.log(formData);
+                $.ajax({
+                    url: baseUrl+'/tasks/0/comments',
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    dataType: 'html',
+                    data: formData,
+                    success:function (data) {
+                        $("#task_body").html(data);
+                    },
+                    error: function (error) {
+                        $("#task_body").html("<h2>Connection Problem.</h2>");
+                    }
+                });
+            });
+
 
             $(document).on("click", '#story_tabs a[href="#calender_view_tab"]', function(){
                 var date = new Date();
@@ -196,6 +322,9 @@
                     },
                     //Random default events
                     events: task_calender,
+                    eventClick:  function(event, jsEvent, view) {
+                        getTask(project_id, story_id, event.task_id);
+                    },
                 });
                 $(this).tab('show');
             });

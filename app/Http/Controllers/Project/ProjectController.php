@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Project;
 
 use App\Models\Project;
 use App\Models\Story;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -85,7 +86,8 @@ class ProjectController extends Controller
     public function show($project)
     {
         $data['project'] = Project::with('stories','tasks')->find($project);
-        $calender_stories =  $data['project']->tasks()->with('story')->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")->groupBy('story_id')->get();
+        if(!$data['project']){return redirect('projects');}
+        $calender_stories =  Task::with('story')->where('project_id', $project)->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")->groupBy('story_id')->get();
 
         $calender_story = [];
         foreach($calender_stories as $story){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Project;
 
 use App\Models\Story;
 use App\Models\Project;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -62,32 +63,32 @@ class StoryController extends Controller
     public function show($project, $story)
     {
         $data['story'] = Story::with('project','tasks','tasks.assignBy', 'tasks.assignTo')->find($story);
-        $story_start_end =  $data['story']->tasks()->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")->groupBy('story_id')->first();
-        $data['story_start'] = $story_start_end->start_date;
-        $data['story_end'] = $story_start_end->end_date;
+        $story_start_end =  Task::with('story')->where('story_id', $story)->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")->groupBy('story_id')->first();
 
-        $calender_tasks = [];
-        foreach($data['story']->tasks as $task){
-            $background = "";
-            if($task->task_status == "pending"){
-                $background = "#f39c12";
-            }elseif($task->task_status == "progress"){
-                $background = "#00c0ef";
-            }elseif($task->task_status == "postponed"){
-                $background = "#f56954";
-            }elseif($task->task_status == "done"){
-                $background = "#00a65a";
+        if($story_start_end) {
+            $calender_tasks = [];
+            $data['story_start'] = $story_start_end->start_date;
+            $data['story_end'] = $story_start_end->end_date;
+            foreach ($data['story']->tasks as $task) {
+                $background = "";
+                if ($task->task_status == "pending") {
+                    $background = "#f39c12";
+                } elseif ($task->task_status == "progress") {
+                    $background = "#00c0ef";
+                } elseif ($task->task_status == "postponed") {
+                    $background = "#f56954";
+                } elseif ($task->task_status == "done") {
+                    $background = "#00a65a";
+                }
+                $calender_tasks[] = ['title' => $task->task_title, 'start' => $task->task_start_date, 'end' => $task->task_end_date, 'backgroundColor' => $background, 'task_id' => $task->id, 'className' => 'task_event'];
             }
-            $calender_tasks[] = [
-                'title' => $task->task_title,
-                'start' => $task->task_start_date,
-                'end' => $task->task_end_date,
-                'backgroundColor' => $background,
-                'task_id' => $task->id,
-                'className' => 'task_event'
-            ];
+            $data['calender_tasks'] = json_encode($calender_tasks);
+        }else{
+            $data['story_start'] = '';
+            $data['story_end'] = '';
+            $data['calender_tasks'] = json_encode([]);
         }
-        $data['calender_tasks'] = json_encode($calender_tasks);
+
         return view('story.show')->with($data);
     }
 

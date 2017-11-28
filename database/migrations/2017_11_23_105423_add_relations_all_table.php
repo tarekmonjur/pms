@@ -27,14 +27,14 @@ class AddRelationsAllTable extends Migration
 
         Schema::table('stories', function (Blueprint $table) {
             if(Schema::hasTable('stories')){
-                $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+                $table->foreign('project_id')->references('id')->on('projects')->onDelete('restrict');
             }
         });
 
         Schema::table('tasks', function (Blueprint $table) {
             if(Schema::hasTable('tasks')){
-                $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-                $table->foreign('story_id')->references('id')->on('stories')->onDelete('cascade');
+                $table->foreign('project_id')->references('id')->on('projects')->onDelete('restrict');
+                $table->foreign('story_id')->references('id')->on('stories')->onDelete('restrict');
             }
         });
 
