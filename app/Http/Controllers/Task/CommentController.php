@@ -34,6 +34,12 @@ class CommentController extends Controller
     }
 
 
+    public function index($task){
+        $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($task);
+        return view('task.comment')->with($data);
+    }
+
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -42,13 +48,13 @@ class CommentController extends Controller
         ]);
 
         if($validator->fails()){
-            $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($request->task_id);
-            return view('task.show')->withErrors($validator)->with($data);
+            $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($request->task);
+            return view('task.comment')->withErrors($validator)->with($data);
         }
         else
         {
             $task_comment = new TaskComment;
-            $task_comment->task_id = $request->task_id;
+            $task_comment->task_id = $request->task;
             $task_comment->user_id = $this->auth->id;
             $task_comment->comments = $request->comments;
             if ($request->hasFile('comment_document')) {
@@ -59,8 +65,7 @@ class CommentController extends Controller
             }
             $task_comment->save();
 
-            $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($request->task_id);
-            return view('task.show')->with($data);
+            return $this->index($request->task);
         }
     }
 
@@ -73,7 +78,7 @@ class CommentController extends Controller
         ]);
 
         if($validator->fails()){
-            $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($request->task_id);
+            $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($request->task);
             return view('task.show')->withErrors($validator)->with($data);
         }
         else
@@ -89,8 +94,7 @@ class CommentController extends Controller
             }
             $task_comment->save();
 
-            $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')->find($request->task_id);
-            return view('task.show')->with($data);
+            return $this->index($request->task);
         }
     }
 
@@ -98,8 +102,7 @@ class CommentController extends Controller
     public function destroy(Request $request)
     {
         TaskComment::where('id', $request->comment)->delete();
-        $data['task'] = Task::with('comments', 'assignTo', 'assignBy')->find($request->task);
-        return view('task.show')->with($data);
+        return $this->index($request->task);
     }
 
 }

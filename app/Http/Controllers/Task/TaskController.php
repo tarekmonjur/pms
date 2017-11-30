@@ -113,7 +113,20 @@ class TaskController extends Controller
             ->where('project_id', $request->project)
             ->where('story_id', $request->story)
             ->find($request->task);
-//        dd($data['task']);
+
+        $teams = User::get();
+        $team_list = [];
+        foreach($teams as $team){
+            $team_list[] = [
+                'id' => $team->id,
+                'name' => $team->fullname,
+                'avatar' => $team->fullphoto,
+                'info'  => 'contact',
+                'href' =>'#'
+            ];
+        }
+        $data['teams'] = json_encode($team_list);
+
         return view('task.show')->with($data);
     }
 

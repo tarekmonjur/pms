@@ -78,7 +78,7 @@
                                         @foreach($story->tasks as $task)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
-                                                <td>{{$task->task_title}}</td>
+                                                <td><a href="{{url('projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}">{{$task->task_title}}</a></td>
                                                 <td>{{$task->project->project_title}}</td>
                                                 <td>
                                                     <label class="label @if($task->task_type == "task") label-info @elseif($task->task_type == "bug") label-danger @elseif($task->task_type == "issue") label-warning @endif">{{$task->task_type}}</label>
@@ -185,122 +185,9 @@
             return false;
         }
 
-
-        // get task comments and show popup
-        function getTask(project_id, story_id, task_id) {
-            $.ajax({
-                url: baseUrl+'/projects/'+project_id+'/stories/'+story_id+'/tasks/'+task_id,
-                type: 'get',
-                dataType: 'html',
-                success:function (data) {
-                    $("#task_body").html(data);
-                    $('#modal-default').modal();
-                },
-                error: function (error) {
-                    $("#task_body").html("<h2>Connection Problem.</h2>");
-                }
-            });
-        }
-
-        // show edit task comment
-        function commentEdit(comment_id) {
-            $("#comment_"+comment_id).hide();
-            $("#comment_edit_"+comment_id).show();
-        }
-
-        // cancel task comment edit
-        function commentCancel(comment_id) {
-            $("#comment_"+comment_id).show();
-            $("#comment_edit_"+comment_id).hide();
-        }
-
-
-        // update task comments
-        function commentUpdate(event) {
-            var formData = new FormData(event.target);
-            event.preventDefault();
-
-            $.ajax({
-                url: baseUrl + '/tasks/' + 0 + '/comments/' + 0,
-                type: 'post',
-                processData: false,
-                contentType: false,
-                dataType: 'html',
-                data: formData,
-                success: function (data) {
-                    $("#task_body").html(data);
-                },
-                error: function (error) {
-                    $("#task_body").html("<h2>Connection Problem.</h2>");
-                }
-            });
-
-            return false;
-        }
-
-        // delete task comments
-        function commentDelete(task_id, comment_id) {
-            swal({
-                title: 'Are you sure delete this comment?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#218838',
-                cancelButtonColor: '#c82333',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false
-            }).then(function () {
-                $.ajax({
-                    url: baseUrl+'/tasks/'+task_id+'/comments/'+comment_id,
-                    type: 'delete',
-                    dataType: 'html',
-                    success:function (data) {
-                        $("#task_body").html(data);
-                    },
-                    error: function (error) {
-                        $("#task_body").html("<h2>Connection Problem.</h2>");
-                    }
-                });
-            }, function (dismiss) {
-                if (dismiss === 'cancel') {
-                    swal(
-                        'Cancelled',
-                        'your stuff is safe.',
-                        'error'
-                    )
-                }
-            });
-        }
-
         var task_calender = <?php echo $calender_tasks;?>
 
         $(function () {
-
-            // add task comments
-            $(document).on("submit","#add_comment", function(e){
-                e.preventDefault();
-                var form = document.querySelector("#add_comment");
-                var formData = new FormData(form);
-//                console.log(formData);
-                $.ajax({
-                    url: baseUrl+'/tasks/0/comments',
-                    type: 'post',
-                    processData: false,
-                    contentType: false,
-                    dataType: 'html',
-                    data: formData,
-                    success:function (data) {
-                        $("#task_body").html(data);
-                    },
-                    error: function (error) {
-                        $("#task_body").html("<h2>Connection Problem.</h2>");
-                    }
-                });
-            });
-
 
             $(document).on("click", '#story_tabs a[href="#calender_view_tab"]', function(){
                 var date = new Date();
@@ -322,9 +209,9 @@
                     },
                     //Random default events
                     events: task_calender,
-                    eventClick:  function(event, jsEvent, view) {
-                        getTask(project_id, story_id, event.task_id);
-                    },
+//                    eventClick:  function(event, jsEvent, view) {
+//                        getTask(project_id, story_id, event.task_id);
+//                    },
                 });
                 $(this).tab('show');
             });

@@ -107,6 +107,7 @@ class ProjectController extends Controller
                 'end' => $story->end_date,
                 'backgroundColor' => $background,
                 'story_id' => $story->story_id,
+                'className' => 'task_event',
                 'url' => url('projects/'.$project.'/stories/'.$story->story_id)
             ];
         }

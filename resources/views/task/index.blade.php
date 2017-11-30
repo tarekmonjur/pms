@@ -35,7 +35,7 @@
                     @foreach($tasks as $task)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$task->task_title}}</td>
+                            <td><a href="{{url('projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}">{{$task->task_title}}</a></td>
                             <td>{{$task->project->project_title}}</td>
                             <td>{{$task->story->story_title}}</td>
                             <td>

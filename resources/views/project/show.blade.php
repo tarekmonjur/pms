@@ -1,6 +1,12 @@
 @extends('layouts.layout')
 @section('content')
 
+    <style>
+        .comment_edit{display: none;}
+        .task_event{cursor: pointer; padding: 5px;}
+        label.error{color:red;}
+    </style>
+
     <section class="content-header">
         <h1>
             {{$project->project_title}}

@@ -80,7 +80,13 @@ class StoryController extends Controller
                 } elseif ($task->task_status == "done") {
                     $background = "#00a65a";
                 }
-                $calender_tasks[] = ['title' => $task->task_title, 'start' => $task->task_start_date, 'end' => $task->task_end_date, 'backgroundColor' => $background, 'task_id' => $task->id, 'className' => 'task_event'];
+                $calender_tasks[] = ['title' => $task->task_title,
+                    'start' => $task->task_start_date,
+                    'end' => $task->task_end_date,
+                    'backgroundColor' => $background,
+                    'className' => 'task_event',
+                    'url' => url('projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)
+                ];
             }
             $data['calender_tasks'] = json_encode($calender_tasks);
         }else{
