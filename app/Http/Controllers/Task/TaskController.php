@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Task;
 
+use App\Jobs\TaskCreateActivityJob;
+use App\Jobs\TaskUpdateActivityJob;
+use App\Models\Activity;
 use App\Models\Project;
 use App\Models\Story;
 use App\Models\Task;
@@ -98,6 +101,8 @@ class TaskController extends Controller
             $task->created_by = $this->auth->id;
             $task->save();
 
+            TaskCreateActivityJob::dispatch($task);
+
             $request->session()->flash('msg_success', 'Task successfully added.');
             return redirect()->back();
         }catch(\Exception $e){
@@ -126,7 +131,8 @@ class TaskController extends Controller
             ];
         }
         $data['teams'] = json_encode($team_list);
-
+        $data['activities'] = Activity::where('task_id', (int)$request->task)->get();
+//dd($data['activities']);
         return view('task.show')->with($data);
     }
 
@@ -169,7 +175,10 @@ class TaskController extends Controller
                 $request->task_document->move($uploadPath, $fileName);
                 $task->task_doc = $fileName;
             }
+            $task->updated_by = $this->auth->id;
             $task->save();
+
+            TaskUpdateActivityJob::dispatch($task);
 
             $request->session()->flash('msg_success', 'Task successfully updated.');
             return redirect()->back();
@@ -183,7 +192,20 @@ class TaskController extends Controller
     public function destroy(Request $request)
     {
         try{
-            Task::where('id', $request->task)->delete();
+            $task = Task::find($request->task);
+            $task->delete();
+
+            $fullname = $this->auth->fullname;
+            $activity = "<a><strong>".$fullname."</strong></a> deleted <strong>".$task->task_title."</strong> task.";
+            Activity::insert([
+                'user_id' => $this->auth->id,
+                'project_id' => $task->project_id,
+                'story_id' => $task->story_id,
+                'task_id' => $task->id,
+                'activity' => $activity,
+                'date' => date('Y-m-d h:i:s')
+            ]);
+
             $request->session()->flash('msg_success', 'Task successfully deleted.');
             return redirect()->back();
         }catch (\Exception $e){

@@ -57,38 +57,14 @@
 
                         <div class="tab-pane" id="task_activity">
                             <div class="box box-primary">
+                                @foreach($activities as $activity)
                                 <div class="post" style="padding: 10px">
-                                    <div class="user-block">
-                                        <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
-                                        <span class="username">
-                                          <a href="#">Jonathan Burke Jr.</a>
-                                        </span>
-                                        <span class="description">Shared publicly - 7:30 PM today</span>
+                                    <div class="user-block" style="margin: 0px">
+                                        <span class="description" style="margin: 0px">Shared publicly - {{date("d M Y h:i:s",strtotime($activity->date["date"]))}}</span>
                                     </div>
-                                    <p>
-                                        Lorem ipsum represents a long-held tradition for designers,
-                                        typographers and the like. Some people hate it and argue for
-                                        its demise, but others ignore the hate as they create awesome
-                                        tools to help create filler text for everyone from bacon lovers
-                                        to Charlie Sheen fans.
-                                    </p>
+                                    <p>{!! $activity->activity !!}</p>
                                 </div>
-                                <div class="post clearfix" style="padding: 10px">
-                                    <div class="user-block">
-                                        <img class="img-circle img-bordered-sm" src="../../dist/img/user7-128x128.jpg" alt="User Image">
-                                        <span class="username">
-                                          <a href="#">Sarah Ross</a>
-                                        </span>
-                                        <span class="description">Sent you a message - 3 days ago</span>
-                                    </div>
-                                    <p>
-                                        Lorem ipsum represents a long-held tradition for designers,
-                                        typographers and the like. Some people hate it and argue for
-                                        its demise, but others ignore the hate as they create awesome
-                                        tools to help create filler text for everyone from bacon lovers
-                                        to Charlie Sheen fans.
-                                    </p>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -197,13 +173,13 @@
                 var formData = new FormData(form);
 //                console.log(formData);
 
-                $(this).find("textarea.mention").mentionsInput('val', function(text) {
-                    alert(text);
-                });
-
-                $(this).find("textarea.mention").mentionsInput('getMentions', function(data) {
-                    alert(JSON.stringify(data));
-                });
+//                $(this).find("textarea.mention").mentionsInput('val', function(text) {
+//                    alert(text);
+//                });
+//
+//                $(this).find("textarea.mention").mentionsInput('getMentions', function(data) {
+//                    alert(JSON.stringify(data));
+//                });
 
                 $.ajax({
                     url: baseUrl+'/tasks/'+ task_id +'/comments',

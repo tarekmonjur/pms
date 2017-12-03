@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Jobs\ProjectCreateActivityJob;
+use App\Jobs\ProjectUpdateActivityJob;
+use App\Models\Activity;
 use App\Models\Project;
 use App\Models\Story;
 use App\Models\Task;
@@ -74,6 +77,8 @@ class ProjectController extends Controller
             $project->created_by = $this->auth->id;
             $project->save();
 
+            ProjectCreateActivityJob::dispatch($project);
+
             $request->session()->flash('msg_success', 'Project successfully added.');
             return redirect()->back();
         }catch(\Exception $e){
@@ -137,6 +142,10 @@ class ProjectController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request)
     {
         $request->validate([
@@ -154,6 +163,7 @@ class ProjectController extends Controller
             $project->project_end_date = $request->project_end_date;
             $project->project_status = $request->project_status;
             $project->project_details = $request->project_details;
+            $project->updated_by = $this->auth->id;
             if($request->hasFile('project_document')){
                 $fileName = time().'.'.$request->project_document->extension();
                 $uploadPath = public_path('uploads/projects');
@@ -161,6 +171,8 @@ class ProjectController extends Controller
                 $project->project_doc = $fileName;
             }
             $project->save();
+
+            ProjectUpdateActivityJob::dispatch($project);
 
             $request->session()->flash('msg_success', 'Project successfully updated.');
             return redirect()->back();
@@ -174,7 +186,20 @@ class ProjectController extends Controller
     public function destroy(Request $request)
     {
         try{
-            Project::where('id', $request->project)->delete();
+            $project = Project::find($request->project);
+            $project->delete();
+
+            $fullname = $this->auth->fullname;
+            $activity = "<a><strong>".$fullname."</strong></a> deleted <strong>".$project->project_title."</strong> project.";
+            Activity::insert([
+                'user_id' => $this->auth->id,
+                'project_id' => $project->id,
+                'story_id' => null,
+                'task_id' => null,
+                'activity' => $activity,
+                'date' => date('Y-m-d h:i:s')
+            ]);
+
             $request->session()->flash('msg_success', 'Project successfully deleted.');
             return redirect()->back();
         }catch (\Exception $e){

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Jobs\StoryCreateActivityJob;
+use App\Jobs\StoryUpdateActivityJob;
 use App\Models\Story;
-use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -50,6 +51,8 @@ class StoryController extends Controller
             $story->story_details = $request->story_details;
             $story->created_by = $this->auth->id;
             $story->save();
+
+            StoryCreateActivityJob::dispatch($story);
 
             $request->session()->flash('msg_success', 'Story successfully added.');
             return redirect()->back();
@@ -117,6 +120,8 @@ class StoryController extends Controller
             $story->updated_by = $this->auth->id;
             $story->save();
 
+            StoryUpdateActivityJob::dispatch($story);
+
             $request->session()->flash('msg_success', 'Story successfully Updated.');
             return redirect()->back();
         }catch(\Exception $e){
@@ -129,7 +134,20 @@ class StoryController extends Controller
     public function destroy(Request $request)
     {
         try{
-            Story::where('id', $request->story)->delete();
+            $story = Story::find($request->story);
+            $story->delete();
+
+            $fullname = $this->auth->fullname;
+            $activity = "<a><strong>".$fullname."</strong></a> deleted <strong>".$story->story_title."</strong> story.";
+            Activity::insert([
+                'user_id' => $this->auth->id,
+                'project_id' => $story->project_id,
+                'story_id' => $story->id,
+                'task_id' => null,
+                'activity' => $activity,
+                'date' => date('Y-m-d h:i:s')
+            ]);
+
             $request->session()->flash('msg_success', 'Story successfully deleted.');
             return redirect()->back();
         }catch (\Exception $e){

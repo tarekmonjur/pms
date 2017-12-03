@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Task;
 
+use App\Jobs\CommentCreateActivityJob;
+use App\Jobs\CommentUpdateActivityJob;
+use App\Models\Activity;
 use App\Models\Task;
 use App\Models\TaskComment;
 use Illuminate\Http\Request;
@@ -65,6 +68,8 @@ class CommentController extends Controller
             }
             $task_comment->save();
 
+            CommentCreateActivityJob::dispatch($task_comment);
+
             return $this->index($request->task);
         }
     }
@@ -94,6 +99,8 @@ class CommentController extends Controller
             }
             $task_comment->save();
 
+            CommentUpdateActivityJob::dispatch($task_comment);
+
             return $this->index($request->task);
         }
     }
@@ -101,7 +108,22 @@ class CommentController extends Controller
 
     public function destroy(Request $request)
     {
-        TaskComment::where('id', $request->comment)->delete();
+        $task_comment = TaskComment::find($request->comment);
+        $task_comment->delete();
+
+        $task = $task_comment->task;
+        $fullname = $this->auth->fullname;
+        $activity = "<a><strong>".$fullname."</strong></a> deleted <strong>".$task->task_title."</strong> comments.";
+        Activity::insert([
+            'user_id' => $this->auth->id,
+            'project_id' => $task->project_id,
+            'story_id' => $task->story_id,
+            'task_id' => $task->id,
+            'activity' => $activity,
+            'date' => date('Y-m-d h:i:s')
+        ]);
+
+
         return $this->index($request->task);
     }
 
