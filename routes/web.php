@@ -57,6 +57,11 @@ Route::resource('company', 'Company\CompanyController');
 Route::resource('department', 'Company\DepartmentController');
 
 /*
+ * Teams routes.
+ */
+Route::resource('teams', 'User\TeamController');
+
+/*
  * Project routes.
  */
 Route::resource('projects', 'Project\ProjectController');
