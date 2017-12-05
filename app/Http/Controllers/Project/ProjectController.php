@@ -155,6 +155,7 @@ class ProjectController extends Controller
     {
         $request->validate([
             'project_title' => 'required|max:255',
+            'project_teams' => 'required',
             'project_start_date' => 'required|date_format:Y-m-d',
             'project_end_date' => 'required|date_format:Y-m-d',
             'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
