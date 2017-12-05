@@ -15,6 +15,12 @@ class Project extends Model
         return $this->belongsTo('App\Models\User', 'updated_by', 'id');
     }
 
+    public function teams($team_ids){
+        if(!empty($team_ids)){
+            return Team::whereRaw("id in (".$team_ids.")")->get();
+        }
+    }
+
     public function tasks()
     {
         return $this->hasMany('App\Models\Task');

@@ -8,6 +8,7 @@ use App\Models\Activity;
 use App\Models\Project;
 use App\Models\Story;
 use App\Models\Task;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,8 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('project.create');
+        $data['teams'] = Team::orderBy('id', 'desc')->get();
+        return view('project.create')->with($data);
     }
 
 
@@ -56,14 +58,16 @@ class ProjectController extends Controller
     {
         $request->validate([
            'project_title' => 'required|max:255',
+           'project_teams' => 'required',
            'project_start_date' => 'required|date_format:Y-m-d',
            'project_end_date' => 'required|date_format:Y-m-d',
-            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
-            'project_status' => 'required',
+           'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
+           'project_status' => 'required',
         ]);
         try {
             $project = new Project;
             $project->project_title = $request->project_title;
+            $project->project_team = implode(',', $request->project_teams);
             $project->project_start_date = $request->project_start_date;
             $project->project_end_date = $request->project_end_date;
             $project->project_status = $request->project_status;
@@ -137,6 +141,7 @@ class ProjectController extends Controller
             return $html;
         }
 
+        $data['teams'] = Team::orderBy('id', 'desc')->get();
         $data['project'] = Project::find($request->project);
         return view('project.edit')->with($data);
     }
@@ -158,6 +163,7 @@ class ProjectController extends Controller
 
         try{
             $project = Project::find($request->project);
+            $project->project_team = implode(',', $request->project_teams);
             $project->project_title = $request->project_title;
             $project->project_start_date = $request->project_start_date;
             $project->project_end_date = $request->project_end_date;

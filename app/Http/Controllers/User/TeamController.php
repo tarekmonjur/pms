@@ -136,7 +136,7 @@ class TeamController extends Controller
             'team_name' => 'required|max:255',
         ]);
 
-//        try {
+        try {
             $team = Team::find($id);
             $team->team_name = $request->team_name;
             $team->team_details = $request->team_details;
@@ -159,10 +159,10 @@ class TeamController extends Controller
 
             $request->session()->flash('msg_success', 'Team successfully updated.');
             return redirect('teams');
-//        }catch(\Exception $e){
-//            $request->session()->flash('msg_error', 'Team not updated.');
-//            return redirect()->back();
-//        }
+        }catch(\Exception $e){
+            $request->session()->flash('msg_error', 'Team not updated.');
+            return redirect()->back();
+        }
     }
 
     /**

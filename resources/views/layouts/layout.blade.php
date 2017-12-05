@@ -22,6 +22,8 @@
     <!-- fullCalendar -->
     <link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.min.css')}}">
     <link rel="stylesheet" href="{{asset('bower_components/fullcalendar/dist/fullcalendar.print.min.css')}}" media="print">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{asset('bower_components/select2/dist/css/select2.min.css')}}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('css/AdminLTE.min.css')}}">
 
@@ -77,6 +79,8 @@
     <script src="{{asset('bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
     <!-- jQuery UI 1.11.4 -->
     <script src="{{asset('bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
+    <!-- Select2 -->
+    <script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
     <!-- DataTables -->
     <script src="{{asset('bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
@@ -188,7 +192,9 @@
             $('.datepicker').datepicker({
                 autoclose: true,
                 format: "yyyy-mm-dd"
-            })
+            });
+
+            $('.select2').select2();
         });
     </script>
 

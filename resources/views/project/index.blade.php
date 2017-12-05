@@ -17,6 +17,7 @@
                     <tr>
                         <th>SL</th>
                         <th>Project Title</th>
+                        <th>Project Teams</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Status</th>
@@ -32,6 +33,13 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td><a href="{{url('projects/'.$project->id)}}">{{$project->project_title}}</a></td>
+                            <td>
+                                @if($project_team = $project->teams($project->project_team))
+                                   @foreach($project_team as $team)
+                                       {{$loop->iteration}} . <a href="{{url('teams')}}">{{$team->team_name}}</a><br>
+                                   @endforeach
+                                @endif
+                            </td>
                             <td>{{$project->project_start_date}}</td>
                             <td>{{$project->project_end_date}}</td>
                             <td>
@@ -61,6 +69,7 @@
                     <tr>
                         <th>SL</th>
                         <th>Project Title</th>
+                        <th>Project Teams</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Status</th>

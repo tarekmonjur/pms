@@ -32,6 +32,25 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group {{ $errors->has('project_teams') ? ' has-error' : '' }}">
+                                        <label for="project_teams">Project Teams</label>
+                                        <select name="project_teams[]" id="project_teams" class="select2 form-control" multiple>
+                                            <?php $team_arr = ($project->project_team)?explode(',',$project->project_team):[];?>
+                                            @foreach($teams as $team)
+                                                <option value="{{$team->id}}" @if(in_array($team->id, $team_arr)) selected @endif>{{$team->team_name}}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('project_teams'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('project_teams') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group {{ $errors->has('project_start_date') ? ' has-error' : '' }}">
                                         <label for="project_start_date">Project Start Date</label>
