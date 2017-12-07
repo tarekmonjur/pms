@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Project;
 
 use App\Jobs\StoryCreateActivityJob;
 use App\Jobs\StoryUpdateActivityJob;
+use App\Models\Activity;
 use App\Models\Story;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -97,7 +98,7 @@ class StoryController extends Controller
             $data['story_end'] = '';
             $data['calender_tasks'] = json_encode([]);
         }
-
+        $data['activities'] = Activity::where('story_id', (int)$story)->get();
         return view('story.show')->with($data);
     }
 

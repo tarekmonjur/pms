@@ -44,8 +44,13 @@ class TaskController extends Controller
             ->where('project_id', $project)
             ->where('story_id', $story)
             ->get();
+
         $data['project_id'] = $project;
         $data['story_id'] = $story;
+
+        $data['project'] = Project::find($project);
+        $data['story'] = Story::find($story);
+
         return view('task.index')->with($data);
     }
 
@@ -55,14 +60,23 @@ class TaskController extends Controller
         $data['projects'] = Project::orderBy('id','desc')->get();
         $data['users'] = User::orderBy('id','desc')->get();
 
+        if(!empty($request->story)){
+            $data['story_id'] = $request->story;
+            $data['story'] = Story::find($request->story);
+        }else{
+            $data['story_id'] = null;
+            $data['story'] = (object)[];
+        }
+
         if(!empty($request->project)){
             $data['project_id'] = $request->project;
             $data['stories'] = Story::where('project_id', $request->project)->get();
+            $data['project'] = Project::find($request->project);
         }else{
             $data['project_id'] = null;
             $data['stories'] = [];
+            $data['project'] = (object)[];
         }
-        $data['story_id'] = (!empty($request->story))?$request->story:null;
 
         return view('task.create')->with($data);
     }

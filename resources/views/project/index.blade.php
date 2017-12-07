@@ -3,9 +3,11 @@
 
     <section class="content-header">
         <h1>
-            Manage Project
-            <small> show all projects.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/projects/create')}}"> Create Project</a>
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active"><a href="{{url('/projects')}}">Project</a></li>
+                <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/create')}}"> Create Project</a>
+            </ol>
         </h1>
     </section>
 

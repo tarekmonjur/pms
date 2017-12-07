@@ -3,9 +3,12 @@
 
     <section class="content-header">
         <h1>
-            Edit Project
-            <small> project create form.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/projects')}}"> View Projects</a>
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{{url('/projects')}}">Project</a></li>
+                <li><a href="{{url('/projects/'.$project->id.'/edit')}}">Edit Project</a></li>
+                <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects')}}"> View Projects</a>
+            </ol>
         </h1>
     </section>
 

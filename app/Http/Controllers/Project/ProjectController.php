@@ -120,7 +120,7 @@ class ProjectController extends Controller
                 'url' => url('projects/'.$project.'/stories/'.$story->story_id)
             ];
         }
-
+        $data['activities'] = Activity::where('project_id', (int)$project)->get();
         $data['calender_story'] = json_encode($calender_story);
         return view('project.show')->with($data);
     }

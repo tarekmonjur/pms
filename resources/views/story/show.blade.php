@@ -9,9 +9,13 @@
 
     <section class="content-header">
         <h1>
-            {{$story->story_title}}
-            <small> show all stories of project.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/projects/'.$story->project_id.'/stories/'.$story->id.'/tasks/create')}}"> Add Task</a>
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{{url('/projects')}}">Project</a></li>
+                <li><a href="{{url('/projects/'.$story->project_id)}}">{{$story->project->project_title}}</a></li>
+                <li><a href="{{url('/projects/'.$story->project_id.'/stories/'.$story->id)}}">{{$story->story_title}}</a></li>
+                <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/'.$story->project_id.'/stories/'.$story->id.'/tasks/create')}}"> Add Task</a>
+            </ol>
         </h1>
     </section>
 
@@ -23,6 +27,7 @@
                         <li class="active"><a href="#story" data-toggle="tab">Story</a></li>
                         <li><a href="#story_tab" data-toggle="tab">All Tasks</a></li>
                         <li><a href="#calender_view_tab" data-toggle="tab">Calender View</a></li>
+                        <li><a href="#story_activity" data-toggle="tab">Story Activity</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -132,6 +137,19 @@
                                 <div class="box-body no-padding">
                                     <div id="calendar"></div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="story_activity">
+                            <div class="box box-primary">
+                                @foreach($activities as $activity)
+                                    <div class="post" style="padding: 10px">
+                                        <div class="user-block" style="margin: 0px">
+                                            <span class="description" style="margin: 0px">Shared publicly - {{date("d M Y h:i:s",strtotime($activity->date["date"]))}}</span>
+                                        </div>
+                                        <p>{!! $activity->activity !!}</p>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

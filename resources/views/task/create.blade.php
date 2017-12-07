@@ -3,9 +3,14 @@
 
     <section class="content-header">
         <h1>
-            Create Task
-            <small> task create form.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/projects/'.$project_id.'/stories/'.$story_id.'/tasks')}}"> View Tasks</a>
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{{url('/projects')}}">Project</a></li>
+                <li><a href="{{url('/projects/'.$project_id)}}">{{$project->project_title or ''}}</a></li>
+                <li><a href="{{url('/projects/'.$project_id.'/stories/'.$story_id)}}">{{$story->story_title or ''}}</a></li>
+                <li><a href="{{url('/projects/'.$project_id.'/stories/'.$story_id.'/create')}}">Create Task</a></li>
+                <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/'.$project_id.'/stories/'.$story_id.'/tasks')}}"> View Tasks</a>
+            </ol>
         </h1>
     </section>
 

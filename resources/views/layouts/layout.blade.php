@@ -41,6 +41,18 @@
 
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <style>
+        .breadcrumb{
+            margin-bottom: 0px!important;
+        }
+        .breadcrumb-btn {
+            float: right!important;
+            position: absolute;
+            right: 20px;
+            bottom: 5px;
+        }
+    </style>
 </head>
 
 <body class="hold-transition skin-black layout-top-nav">

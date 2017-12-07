@@ -3,9 +3,14 @@
 
     <section class="content-header">
         <h1>
-            Edit Task
-            <small> task update form.</small>
-            <a class="btn btn-primary pull-right" href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks')}}"> View Tasks</a>
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{{url('/projects')}}">Project</a></li>
+                <li><a href="{{url('/projects/'.$task->project_id)}}">{{$task->project->project_title or ''}}</a></li>
+                <li><a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id)}}">{{$task->story->story_title or ''}}</a></li>
+                <li><a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/create')}}">Edit Task</a></li>
+                <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks')}}"> View Tasks</a>
+            </ol>
         </h1>
     </section>
 
