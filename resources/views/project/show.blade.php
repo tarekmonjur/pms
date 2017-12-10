@@ -5,6 +5,7 @@
         .comment_edit{display: none;}
         .task_event{cursor: pointer; padding: 5px;}
         label.error{color:red;}
+        .select2-container{width: 100%!important;}
     </style>
 
     <section class="content-header">
@@ -37,6 +38,11 @@
                                         <div class="d-flex w-100 justify-content-between">
                                             <h4 class="mb-1" style="font-weight: bold">{{$project->project_title}}</h4>
                                         </div>
+                                        <p class="mb-1">Project Team :
+                                            @foreach($project->teams($project->project_team) as $team)
+                                                {{$loop->iteration}} . <a href="{{url('teams')}}" style="color: white">{{$team->team_name}}</a><br>
+                                            @endforeach
+                                        </p>
                                         <p class="mb-1">Start Date : {{$project->project_start_date}}</p>
                                         <p class="mb-1">End Date : {{$project->project_end_date}}</p>
                                         <p class="mb-1">Project Status : {{$project->project_status}}</p>
@@ -61,6 +67,7 @@
                                         <tr>
                                             <th>SL</th>
                                             <th>Story Title</th>
+                                            <th>Members</th>
                                             <th>Story Status</th>
                                             <th>Story Details</th>
                                             <th>Created</th>
@@ -73,6 +80,13 @@
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
                                                 <td><a href="{{url('projects/'.$project->id.'/stories/'.$pstory->id)}}">{{$pstory->story_title}}</a></td>
+                                                <td>
+                                                    @if($story_member = $pstory->members($pstory->story_member))
+                                                        @foreach($story_member as $member)
+                                                            {{$loop->iteration}} . <a href="{{url('teams')}}">{{$member->fullname}}</a><br>
+                                                        @endforeach
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <label class="label @if($pstory->story_status == "pending") label-warning @elseif($pstory->story_status == "progress") label-info @elseif($pstory->story_status == "postponed") label-danger @elseif($pstory->story_status == "done") label-success @endif">{{$pstory->story_status}}</label>
                                                 </td>
@@ -148,6 +162,24 @@
                                     <div class="form-group">
                                         <label for="project_title">Story Title</label>
                                         <input type="text" class="form-control" name="story_title" placeholder="Enter Story Title">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group {{ $errors->has('story_member') ? ' has-error' : '' }}">
+                                        <label for="story_member">Story Member</label>
+                                        <select name="story_member[]" id="story_member" class="select2 form-control" multiple>
+                                            @foreach($team_members as $member)
+                                                <option value="{{$member->id}}">{{$member->first_name}}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('story_member'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('story_member') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

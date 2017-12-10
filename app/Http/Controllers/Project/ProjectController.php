@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Story;
 use App\Models\Task;
 use App\Models\Team;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -122,6 +123,12 @@ class ProjectController extends Controller
         }
         $data['activities'] = Activity::where('project_id', (int)$project)->get();
         $data['calender_story'] = json_encode($calender_story);
+
+        $data['team_members'] = TeamMember::select('users.*')
+            ->whereRaw("team_id in (".$data['project']->project_team.")")
+            ->join('users','users.id','=','team_members.user_id')
+            ->get();
+
         return view('project.show')->with($data);
     }
 

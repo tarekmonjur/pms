@@ -17,6 +17,13 @@ class Story extends Model
     }
 
 
+    public function members($member_ids){
+        if(!empty($member_ids)){
+            return User::whereRaw("id in (".$member_ids.")")->get();
+        }
+    }
+
+
     public function project()
     {
         return $this->belongsTo('App\Models\Project');

@@ -7,6 +7,7 @@ use App\Jobs\StoryUpdateActivityJob;
 use App\Models\Activity;
 use App\Models\Story;
 use App\Models\Task;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,7 @@ class StoryController extends Controller
             $story = new Story;
             $story->project_id = $project;
             $story->story_title = $request->story_title;
+            $story->story_member = implode(',', $request->story_member);
             $story->story_status = $request->story_status;
             $story->story_details = $request->story_details;
             $story->created_by = $this->auth->id;
@@ -105,7 +107,11 @@ class StoryController extends Controller
 
     public function edit($project, $story)
     {
-        $data['story'] = Story::find($story);
+        $data['story'] = Story::with('project')->find($story);
+        $data['team_members'] = TeamMember::select('users.*')
+            ->whereRaw("team_id in (".$data['story']->project->project_team.")")
+            ->join('users','users.id','=','team_members.user_id')
+            ->get();
         return view('story.edit')->with($data);
     }
 
@@ -116,6 +122,7 @@ class StoryController extends Controller
             $story = Story::find($request->story);
             $story->project_id = $request->project_id;
             $story->story_title = $request->story_title;
+            $story->story_member = implode(',', $request->story_member);
             $story->story_status = $request->story_status;
             $story->story_details = $request->story_details;
             $story->updated_by = $this->auth->id;

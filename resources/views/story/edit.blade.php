@@ -1,3 +1,10 @@
+<!-- Select2 -->
+<link rel="stylesheet" href="{{asset('bower_components/select2/dist/css/select2.min.css')}}">
+<style>
+    .select2-container--default .select2-selection--multiple .select2-selection__choice{background-color: #2489cc
+    }
+</style>
+
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -16,6 +23,24 @@
                         <div class="form-group">
                             <label for="project_title">Story Title</label>
                             <input type="text" class="form-control" name="story_title" value="{{$story->story_title}}" placeholder="Enter Story Title">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {{ $errors->has('story_member') ? ' has-error' : '' }}">
+                            <label for="story_member">Story Member</label>
+                            <select name="story_member[]" id="story_member" class="select2 form-control" multiple>
+                                @foreach($team_members as $member)
+                                    <option value="{{$member->id}}" @if(in_array($member->id, explode(',', $story->story_member))) selected @endif>{{$member->first_name}}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('story_member'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('story_member') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -51,3 +76,13 @@
         </div>
     </form>
 </div>
+
+<!-- Select2 -->
+<script src="{{asset('bower_components/select2/dist/js/select2.full.min.js')}}"></script>
+
+<script>
+    $(function () {
+
+        $('.select2').select2();
+    });
+</script>

@@ -17,6 +17,7 @@ class CreateStoriesTable extends Migration
             $table->increments('id');
             $table->integer('project_id')->unsigned();
             $table->string('story_title');
+            $table->string('story_member')->nullable();
             $table->enum('story_status', ['pending', 'progress', 'postponed', 'done']);
             $table->text('story_details');
             $table->integer('created_by')->unsigned()->default(0);
