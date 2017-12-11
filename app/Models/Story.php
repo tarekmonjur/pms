@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Events\StoryCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class Story extends Model
 {
+
+    protected $dispatchesEvents = [
+        'created' => StoryCreated::class
+    ];
+
 
     public function createdBy(){
         return $this->belongsTo('App\Models\User', 'created_by', 'id');

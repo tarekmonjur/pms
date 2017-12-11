@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Events\TaskCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
+
+    protected $dispatchesEvents = [
+        'created' => TaskCreated::class
+    ];
+
 
     public function createdBy(){
         return $this->belongsTo('App\Models\User', 'created_by', 'id');

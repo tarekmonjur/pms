@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Jenssegers\Mongodb\Eloquent\Model;
 
-class Activity extends Model
+class Access extends Model
 {
 
     protected $connection = 'mongodb';
 
-    protected $collection = 'activities';
-
+    protected $collection = 'accesses';
 
 }

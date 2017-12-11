@@ -58,14 +58,15 @@ class TaskController extends Controller
     public function create(Request $request)
     {
         $data['projects'] = Project::orderBy('id','desc')->get();
-        $data['users'] = User::orderBy('id','desc')->get();
 
         if(!empty($request->story)){
             $data['story_id'] = $request->story;
             $data['story'] = Story::find($request->story);
+            $data['users'] = $data['story']->members($data['story']->story_member);
         }else{
             $data['story_id'] = null;
             $data['story'] = (object)[];
+            $data['users'] = User::orderBy('id','desc')->get();
         }
 
         if(!empty($request->project)){
@@ -93,6 +94,8 @@ class TaskController extends Controller
             'task_end_date' => 'required|date_format:Y-m-d',
             'task_status' => 'required|max:255',
             'task_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
+            'assign_by' => 'required',
+            'assign_to' => 'required',
         ]);
         try {
             $task = new Task;
@@ -170,6 +173,8 @@ class TaskController extends Controller
             'task_end_date' => 'required|date_format:Y-m-d',
             'task_status' => 'required|max:255',
             'task_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
+            'assign_by' => 'required',
+            'assign_to' => 'required',
         ]);
 
         try{

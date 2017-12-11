@@ -65,7 +65,11 @@
                                 @foreach($activities as $activity)
                                 <div class="post" style="padding: 10px">
                                     <div class="user-block" style="margin: 0px">
-                                        <span class="description" style="margin: 0px">Shared publicly - {{date("d M Y h:i:s",strtotime($activity->date["date"]))}}</span>
+                                        @if(isset($activity->date["date"]))
+                                            <span class="description" style="margin: 0px">Shared publicly - {{date("d M Y h:i:s",strtotime($activity->date["date"]))}}</span>
+                                        @else
+                                            <span class="description" style="margin: 0px">Shared publicly - {{date("d M Y h:i:s",strtotime($activity->date))}}</span>
+                                        @endif
                                     </div>
                                     <p>{!! $activity->activity !!}</p>
                                 </div>

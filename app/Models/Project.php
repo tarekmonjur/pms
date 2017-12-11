@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Events\ProjectCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
+
+    protected $dispatchesEvents = [
+        'created' => ProjectCreated::class
+    ];
+
 
     public function createdBy(){
         return $this->belongsTo('App\Models\User', 'created_by', 'id');
