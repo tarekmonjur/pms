@@ -9,7 +9,7 @@ class Story extends Model
 {
 
     protected $dispatchesEvents = [
-        'created' => StoryCreated::class
+        'saved' => StoryCreated::class
     ];
 
 

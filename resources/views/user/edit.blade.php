@@ -120,6 +120,7 @@
                                             <option value="">--- Select User Role ---</option>
                                             <option value="director" @if($user->user_type == "director") selected @endif>Director</option>
                                             <option value="admin" @if($user->user_type == "admin") selected @endif>Admin</option>
+                                            <option value="manager" @if($user->user_type == "manager") selected @endif>Manager</option>
                                             <option value="employee" @if($user->user_type == "employee") selected @endif>Employee</option>
                                         </select>
                                         @if ($errors->has('user_type'))

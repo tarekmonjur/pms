@@ -119,6 +119,7 @@
                                         <option value="">--- Select User Role ---</option>
                                         <option value="director">Director</option>
                                         <option value="admin">Admin</option>
+                                        <option value="manager">Manager</option>
                                         <option value="employee">Employee</option>
                                     </select>
                                     @if ($errors->has('user_type'))

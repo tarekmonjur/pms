@@ -106,6 +106,7 @@
                                         <tr>
                                             <th>SL</th>
                                             <th>Story Title</th>
+                                            <th>Members</th>
                                             <th>Story Status</th>
                                             <th>Story Details</th>
                                             <th>Created</th>

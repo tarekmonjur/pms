@@ -6,7 +6,9 @@
             <ol class="breadcrumb" style="left: 0px!important;">
                 <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active"><a href="{{url('/projects')}}">Project</a></li>
+                @if(canAccess($auth->user_type, "projects/create"))
                 <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/create')}}"> Create Project</a>
+                @endif
             </ol>
         </h1>
     </section>

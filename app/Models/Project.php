@@ -9,7 +9,7 @@ class Project extends Model
 {
 
     protected $dispatchesEvents = [
-        'created' => ProjectCreated::class
+        'saved' => ProjectCreated::class
     ];
 
 

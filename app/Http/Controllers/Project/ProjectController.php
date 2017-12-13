@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Project;
 
 use App\Jobs\ProjectCreateActivityJob;
 use App\Jobs\ProjectUpdateActivityJob;
+use App\Models\Access;
 use App\Models\Activity;
 use App\Models\Project;
 use App\Models\Story;
@@ -31,7 +32,7 @@ class ProjectController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'permission']);
         $this->middleware(function($request, $next){
             $this->auth = Auth::user();
             return $next($request);
@@ -43,7 +44,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $data['projects'] = Project::orderBy('id','desc')->get();
+        $project_access = Access::get_access_project_by_user_id($this->auth->id);
+        $data['projects'] = Project::whereIn('id', $project_access)->orderBy('id','desc')->get();
         return view('project.index')->with($data);
     }
 
@@ -95,9 +97,23 @@ class ProjectController extends Controller
 
     public function show($project)
     {
-        $data['project'] = Project::with('stories','tasks')->find($project);
+        $project_access = Access::get_access_project_by_user_id($this->auth->id);
+        $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
+
+        $data['project'] = Project::with(['stories' => function($q)use($story_access){
+                $q->whereIn('id', $story_access);
+            },'tasks'])
+            ->whereIn('id', $project_access)
+            ->find($project);
+
         if(!$data['project']){return redirect('projects');}
-        $calender_stories =  Task::with('story')->where('project_id', $project)->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")->groupBy('story_id')->get();
+
+        $calender_stories =  Task::with('story')
+            ->where('project_id', $project)
+            ->whereIn('story_id', $story_access)
+            ->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
+            ->groupBy('story_id')
+            ->get();
 
         $calender_story = [];
         foreach($calender_stories as $story){

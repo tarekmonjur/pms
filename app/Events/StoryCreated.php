@@ -4,7 +4,7 @@ namespace App\Events;
 
 use App\Models\Access;
 use App\Models\Story;
-use App\Models\TeamMember;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -37,10 +37,7 @@ class StoryCreated
         ];
 
         if(!empty($this->story->story_member)){
-            $team_members = TeamMember::select('users.*')
-                ->whereRaw("team_id in (".$this->story->story_member.")")
-                ->join('users','users.id','=','team_members.user_id')
-                ->get();
+            $team_members = User::whereRaw("id in (".$this->story->story_member.")")->get();
             if(count($team_members)>0){
                 foreach($team_members as $team_member){
                     $accesses[] = [

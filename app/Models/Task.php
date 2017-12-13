@@ -9,7 +9,7 @@ class Task extends Model
 {
 
     protected $dispatchesEvents = [
-        'created' => TaskCreated::class
+        'saved' => TaskCreated::class
     ];
 
 
