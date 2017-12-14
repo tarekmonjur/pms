@@ -5,7 +5,9 @@
         <h1>
             Create Team
             <small> team create form.</small>
+            @if(canAccess("teams"))
             <a class="btn btn-primary pull-right" href="{{url('/teams')}}"> View Teams</a>
+            @endif
         </h1>
     </section>
 

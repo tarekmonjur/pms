@@ -33,7 +33,7 @@
                             <label for="story_member">Story Member</label>
                             <select name="story_member[]" id="story_member" class="select2 form-control" multiple>
                                 @foreach($team_members as $member)
-                                    <option value="{{$member->id}}" @if(in_array($member->id, explode(',', $story->story_member))) selected @endif>{{$member->first_name}}</option>
+                                    <option value="{{$member->id}}" @if(in_array($member->id, explode(',', $story->story_member))) selected @endif>{{$member->first_name}} {{$member->last_name}}</option>
                                 @endforeach
                             </select>
                             @if ($errors->has('story_member'))

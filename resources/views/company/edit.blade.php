@@ -5,7 +5,9 @@
         <h1>
             Edit Company
             <small> company update form.</small>
+            @if(canAccess("company"))
             <a class="btn btn-primary pull-right" href="{{url('/company')}}"> View Company</a>
+            @endif
         </h1>
     </section>
 

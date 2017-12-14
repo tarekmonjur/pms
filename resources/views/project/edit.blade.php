@@ -7,7 +7,9 @@
                 <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="{{url('/projects')}}">Project</a></li>
                 <li><a href="{{url('/projects/'.$project->id.'/edit')}}">Edit Project</a></li>
+                @if(canAccess("projects"))
                 <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects')}}"> View Projects</a>
+                @endif
             </ol>
         </h1>
     </section>

@@ -6,12 +6,17 @@
             <ol class="breadcrumb" style="left: 0px!important;">
                 <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active"><a href="{{url('/projects')}}">Project</a></li>
-                @if(canAccess($auth->user_type, "projects/create"))
+                @if(canAccess("projects/create"))
                 <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/create')}}"> Create Project</a>
                 @endif
             </ol>
         </h1>
     </section>
+
+    <?php
+    $edit = (canAccess("projects/edit"))?true:false;
+    $delete = (canAccess("projects/delete"))?true:false;
+    ?>
 
     <section class="content">
         <div class="box box-primary">
@@ -54,15 +59,17 @@
                             <td>{{$project->created_at->format('Y-m-d')}}</td>
                             <td>
                                 <div class="btn-group">
+                                    @if($edit == true)
                                     <a class="btn btn-xs btn-success" href="{{url('projects/'.$project->id.'/edit')}}">Edit</a>
+                                    @endif
+
+                                    @if($delete == true)
                                     <a onclick="return confirmDelete('delete', 'Are you sure delete this project?', 'delete_{{$project->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
                                     <form method="post" action="{{url('projects/'.$project->id)}}" id="delete_{{$project->id}}">
                                         {{csrf_field()}}
                                         {{method_field('delete')}}
                                     </form>
-                                </div>
-                                <div class="btn-group">
-
+                                    @endif
                                 </div>
                             </td>
                         </tr>

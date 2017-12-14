@@ -14,10 +14,17 @@
                 <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="{{url('/projects')}}">Project</a></li>
                 <li class="active"><a href="{{url('/projects/'.$project->id)}}">{{$project->project_title}}</a></li>
+                @if(canAccess("stories/create"))
                 <a class="btn btn-primary breadcrumb-btn" href="#" data-toggle="modal" data-target="#add_story_modal"> Add Story</a>
+                @endif
             </ol>
         </h1>
     </section>
+
+    <?php
+    $edit = (canAccess("stories/edit"))?true:false;
+    $delete = (canAccess("stories/delete"))?true:false;
+    ?>
 
     <section class="content">
         <div class="row">
@@ -25,8 +32,10 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" id="story_tabs">
                         <li class="active"><a href="#project" data-toggle="tab">Project</a></li>
+                        @if(canAccess("projects/stories"))
                         <li><a href="#story_tab" data-toggle="tab">All Stories</a></li>
                         <li><a href="#calender_view_tab" data-toggle="tab">Calender View</a></li>
+                        @endif
                         <li><a href="#project_activity" data-toggle="tab">Project Activity</a></li>
                     </ul>
 
@@ -51,8 +60,12 @@
                                             @if($project->project_doc)
                                                 <a target="_blank" href="{{asset('uploads/projects/'.$project->project_doc)}}" class="btn btn-default btn-xs">View Document</a>
                                             @endif
+                                            @if(canAccess("projects/edit"))
                                             <a href="{{url('projects/'.$project->id.'/edit')}}" class="btn btn-default btn-xs">Edit</a>
+                                            @endif
+                                            @if(canAccess("projects/delete"))
                                             <a href="#" class="btn btn-default btn-xs" onclick="storyDelete('{{url('projects/'.$project->id)}}', 'project')">Delete</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -94,8 +107,12 @@
                                                 <td>{{$pstory->created_at->format('Y-m-d')}}</td>
                                                 <td>
                                                     <div class="btn-group">
+                                                        @if($edit == true)
                                                         <a class="btn btn-xs btn-success" href="#" onclick="editStory('{{$pstory->project_id}}','{{$pstory->id}}')">Edit</a>
+                                                        @endif
+                                                        @if($delete == true)
                                                         <a class="btn btn-xs btn-danger" href="#" onclick="storyDelete('{{url('projects/'.$project->id.'/stories/'.$pstory->id)}}', 'story')">Delete</a>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>
@@ -177,7 +194,7 @@
                                         <label for="story_member">Story Member</label>
                                         <select name="story_member[]" id="story_member" class="select2 form-control" multiple>
                                             @foreach($team_members as $member)
-                                                <option value="{{$member->id}}">{{$member->first_name}}</option>
+                                                <option value="{{$member->id}}">{{$member->first_name}} {{$member->last_name}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('story_member'))

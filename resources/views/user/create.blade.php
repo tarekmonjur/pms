@@ -5,7 +5,9 @@
     <h1>
         Create User
         <small> user create form.</small>
+        @if(canAccess("users"))
         <a class="btn btn-primary pull-right" href="{{url('/users')}}"> View User</a>
+        @endif
     </h1>
 </section>
 
@@ -117,10 +119,9 @@
                                     <label for="user_type">User Role/Type</label>
                                     <select name="user_type" id="user_type" class="form-control">
                                         <option value="">--- Select User Role ---</option>
-                                        <option value="director">Director</option>
-                                        <option value="admin">Admin</option>
-                                        <option value="manager">Manager</option>
-                                        <option value="employee">Employee</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{$role->id}}">{{$role->role_name}}</option>
+                                        @endforeach
                                     </select>
                                     @if ($errors->has('user_type'))
                                         <span class="help-block">

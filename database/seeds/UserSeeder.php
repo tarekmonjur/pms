@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'department_id' => 1,
             'designation' => 'software engineer',
             'mobile_no' => '01832308565',
-            'user_type' => 'admin',
+            'user_type' => 1,
             'status' => 'active',
         ]);
     }

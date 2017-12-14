@@ -5,7 +5,9 @@
         <h1>
             Edit User
             <small> show edit user data.</small>
+            @if(canAccess("users"))
             <a class="btn btn-primary pull-right" href="{{url('/users')}}"> View User</a>
+            @endif
         </h1>
     </section>
 
@@ -13,9 +15,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
-                    <form role="form" method="post" action="{{url('users/edit')}}" enctype="multipart/form-data">
+                    <form role="form" method="post" action="{{url('users/'.$user->id)}}" enctype="multipart/form-data">
                         {{csrf_field()}}
-                        <input type="hidden" value="{{$user->id}}" name="id">
+                        {{method_field('put')}}
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6">
@@ -118,10 +120,9 @@
                                         <label for="user_type">User Role/Type</label>
                                         <select name="user_type" id="user_type" class="form-control">
                                             <option value="">--- Select User Role ---</option>
-                                            <option value="director" @if($user->user_type == "director") selected @endif>Director</option>
-                                            <option value="admin" @if($user->user_type == "admin") selected @endif>Admin</option>
-                                            <option value="manager" @if($user->user_type == "manager") selected @endif>Manager</option>
-                                            <option value="employee" @if($user->user_type == "employee") selected @endif>Employee</option>
+                                            @foreach($roles as $role)
+                                                <option value="{{$role->id}}" @if($user->user_type == $role->id) selected @endif>{{$role->role_name}}</option>
+                                            @endforeach
                                         </select>
                                         @if ($errors->has('user_type'))
                                             <span class="help-block">

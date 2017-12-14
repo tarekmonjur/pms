@@ -27,6 +27,7 @@ class DepartmentController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('permission');
         $this->middleware(function($request, $next){
             $this->auth = Auth::user();
             return $next($request);

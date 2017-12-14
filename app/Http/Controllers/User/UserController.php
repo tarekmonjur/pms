@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Department;
+use App\Models\RolePermission;
 use App\Models\User;
 
 use Illuminate\Support\Facades\File;
@@ -25,6 +26,7 @@ class UserController extends Controller
 
     public function __construct(){
         $this->middleware('auth');
+        $this->middleware('permission');
     }
 
 
@@ -38,6 +40,7 @@ class UserController extends Controller
     public function edit($id){
         $data['user'] = User::find($id);
         $data['departments'] = Department::with('company')->get();
+        $data['roles'] = RolePermission::all();
         return view('user.edit')->with($data);
     }
 

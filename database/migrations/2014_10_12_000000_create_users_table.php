@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->integer('department_id')->unsigned();
             $table->string('designation',100)->nullable();
             $table->string('mobile_no',11)->nullable();
-            $table->enum('user_type', ['admin', 'director', 'manager', 'employee',])->nullable();
+            $table->integer('user_type')->default(0);
             $table->string('photo')->nullable();
             $table->enum('status', ['active', 'inactive'])->nullable();
             $table->string('address')->nullable();

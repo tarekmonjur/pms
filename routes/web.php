@@ -40,11 +40,15 @@ Route::group(['prefix'=>'users'],function(){
     Route::get('/','User\UserController');
     Route::get('create','Auth\RegisterController@showRegister');
     Route::post('create','Auth\RegisterController@register');
-    Route::get('edit/{id}','User\UserController@edit');
-    Route::post('edit','User\UserController@update');
-    Route::get('delete/{id}','User\UserController@delete');
+    Route::get('{id}/edit','User\UserController@edit');
+    Route::put('{id}','User\UserController@update');
+    Route::get('{id}/delete','User\UserController@delete');
 });
 
+/*
+ * Role Permission routes.
+ */
+Route::resource('roles', 'User\RolePermissionController');
 
 /*
  * Company routes.

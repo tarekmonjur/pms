@@ -73,6 +73,11 @@ class User extends Authenticatable
     }
 
 
+    public function role(){
+        return $this->belongsTo('App\Models\RolePermission', 'user_type', 'id');
+    }
+
+
 }
 
 

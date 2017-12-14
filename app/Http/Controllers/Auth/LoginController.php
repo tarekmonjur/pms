@@ -80,6 +80,14 @@ class LoginController extends Controller
             'email'     => $request->email,
             'password'  => $request->password,
         ],$request->remember)){
+
+            $permissions = $this->auth->user()->role;
+            if($permissions){
+                $permission_data = @unserialize($permissions->role_permission);
+            }else{
+                $permission_data = [];
+            }
+            session(['permissions'=>$permission_data]);
             return redirect()->intended('/');
         }else{
             $request->session()->flash('msg_error','Email/Password is invalid!');

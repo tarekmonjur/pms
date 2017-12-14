@@ -5,9 +5,16 @@
         <h1>
             Manage Team
             <small> show all teams.</small>
+            @if(canAccess("teams/create"))
             <a class="btn btn-primary pull-right" href="{{url('/teams/create')}}"> Create Teams</a>
+            @endif
         </h1>
     </section>
+
+    <?php
+    $edit = (canAccess("teams/edit"))?true:false;
+    $delete = (canAccess("teams/delete"))?true:false;
+    ?>
 
     <section class="content">
         <div class="box box-primary">
@@ -38,12 +45,16 @@
                             <td>{{$team->created_at->format('Y-m-d')}}</td>
                             <td>
                                 <div class="btn-group">
+                                    @if($edit == true)
                                     <a class="btn btn-xs btn-success" href="{{url('teams/'.$team->id.'/edit')}}">Edit</a>
+                                    @endif
+                                    @if($delete == true)
                                     <a onclick="return confirmDelete('delete', 'Are you sure delete this team?', 'delete_{{$team->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
                                     <form method="post" action="{{url('teams/'.$team->id)}}" id="delete_{{$team->id}}">
                                         {{csrf_field()}}
                                         {{method_field('delete')}}
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

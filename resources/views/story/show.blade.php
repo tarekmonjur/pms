@@ -14,10 +14,17 @@
                 <li><a href="{{url('/projects')}}">Project</a></li>
                 <li><a href="{{url('/projects/'.$story->project_id)}}">{{$story->project->project_title}}</a></li>
                 <li><a href="{{url('/projects/'.$story->project_id.'/stories/'.$story->id)}}">{{$story->story_title}}</a></li>
+                @if(canAccess("tasks/create"))
                 <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/'.$story->project_id.'/stories/'.$story->id.'/tasks/create')}}"> Add Task</a>
+                @endif
             </ol>
         </h1>
     </section>
+
+    <?php
+    $edit = (canAccess("tasks/edit"))?true:false;
+    $delete = (canAccess("tasks/delete"))?true:false;
+    ?>
 
     <section class="content">
         <div class="row">
@@ -25,8 +32,10 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" id="story_tabs">
                         <li class="active"><a href="#story" data-toggle="tab">Story</a></li>
+                        @if(canAccess("stories/tasks"))
                         <li><a href="#story_tab" data-toggle="tab">All Tasks</a></li>
                         <li><a href="#calender_view_tab" data-toggle="tab">Calender View</a></li>
+                        @endif
                         <li><a href="#story_activity" data-toggle="tab">Story Activity</a></li>
                     </ul>
 
@@ -46,12 +55,16 @@
                                             @if($story->story_doc)
                                                 <a target="_blank" href="{{asset('uploads/projects/'.$story->story_doc)}}" class="btn btn-default btn-xs">View Document</a>
                                             @endif
+                                            @if(canAccess("stories/edit"))
                                             <a href="#" class="btn btn-default btn-xs"  onclick="editStory('{{$story->project_id}}','{{$story->id}}')">Edit</a>
+                                            @endif
+                                            @if(canAccess("stories/delete"))
                                             <a href="#" class="btn btn-default btn-xs" onclick="return confirmDelete('delete', 'Are you sure delete this story?', 'delete_story')">Delete</a>
                                             <form method="post" action="{{url('/projects/'.$story->project_id.'/stories/'.$story->id)}}" id="delete_story">
                                                 {{csrf_field()}}
                                                 {{method_field('delete')}}
                                             </form>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -99,12 +112,16 @@
                                                 <td>{{$task->created_at->format('Y-m-d')}}</td>
                                                 <td>
                                                     <div class="btn-group">
+                                                        @if($edit == true)
                                                         <a class="btn btn-xs btn-success" href="{{url('projects/'.$story->project_id.'/stories/'.$story->id.'/tasks/'.$task->id.'/edit')}}">Edit</a>
+                                                        @endif
+                                                        @if($delete == true)
                                                         <a onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_{{$task->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
                                                         <form method="post" action="{{url('projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}" id="delete_{{$task->id}}">
                                                             {{csrf_field()}}
                                                             {{method_field('delete')}}
                                                         </form>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>

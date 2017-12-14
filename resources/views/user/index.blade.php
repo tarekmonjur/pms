@@ -5,9 +5,16 @@
         <h1>
             Manage User
             <small> show all system users.</small>
+            @if(canAccess("users/create"))
             <a class="btn btn-primary pull-right" href="{{url('/users/create')}}"> Create User</a>
+            @endif
         </h1>
     </section>
+
+    <?php
+    $edit = (canAccess("users/edit"))?true:false;
+    $delete = (canAccess("users/delete"))?true:false;
+    ?>
 
     <section class="content">
         <div class="box box-primary">
@@ -42,14 +49,18 @@
                                 <td>{{$user->department->department_name}} <br> ( {{$user->department->company->company_name}} )</td>
                                 <td>{{$user->designation}}</td>
                                 <td>{{$user->mobile_no}}</td>
-                                <td><label class="label label-info">{{$user->userrole}}</label></td>
+                                <td><label class="label label-info">{{$user->role->role_name}}</label></td>
                                 <td><img width="60px" src="{{$user->fullphoto}}" alt=""></td>
                                 <td>{{$user->address}}</td>
                                 <td>{{$user->created_at}}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-sm btn-success" href="{{url('users/edit/'.$user->id)}}">Edit</a>
-                                        <a onclick="return confirmAction('delete', 'Are you sure delete this user?', '{{url('users/delete/'.$user->id)}}')" class="btn btn-sm btn-danger" href="#">Delete</a>
+                                        @if($edit == true)
+                                        <a class="btn btn-sm btn-success" href="{{url('users/'.$user->id.'/edit')}}">Edit</a>
+                                        @endif
+                                        @if($delete == true)
+                                        <a onclick="return confirmAction('delete', 'Are you sure delete this user?', '{{url('users/'.$user->id.'/delete')}}')" class="btn btn-sm btn-danger" href="#">Delete</a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

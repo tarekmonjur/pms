@@ -5,7 +5,9 @@
         <h1>
             Create Company
             <small> company create form.</small>
+            @if(canAccess("company"))
             <a class="btn btn-primary pull-right" href="{{url('/company')}}"> View Company</a>
+            @endif
         </h1>
     </section>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Department;
+use App\Models\RolePermission;
 use App\Models\User;
 
 use Validator;
@@ -54,6 +55,7 @@ class RegisterController extends Controller
      */
     public function showRegister(){
         $data['departments'] = Department::with('company')->get();
+        $data['roles'] = RolePermission::all();
         return view('user.create')->with($data);
     }
 
