@@ -15,10 +15,17 @@
                 <li><a href="{{url('/projects/'.$task->project_id)}}">{{$task->project->project_title or ''}}</a></li>
                 <li><a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id)}}">{{$task->story->story_title or ''}}</a></li>
                 <li><a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}">{{$task->task_title}}</a></li>
+                @if(canAccess("tasks/create"))
                 <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/create')}}"> Add Task</a>
+                @endif
             </ol>
         </h1>
     </section>
+
+    <?php
+    $edit = (canAccess("tasks/edit"))?true:false;
+    $delete = (canAccess("tasks/delete"))?true:false;
+    ?>
 
     <section class="content">
         <div class="row">
@@ -46,12 +53,16 @@
                                             @if($task->task_doc)
                                                 <a target="_blank" href="{{asset('uploads/tasks/'.$task->task_doc)}}" class="btn btn-success btn-xs">View Document</a>
                                             @endif
+                                            @if(canAccess("tasks/edit"))
                                             <a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/edit')}}" class="btn btn-primary btn-xs">Edit</a>
+                                            @endif
+                                            @if(canAccess("tasks/delete"))
                                             <a href="#" class="btn btn-danger btn-xs" onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_task')">Delete</a>
                                             <form method="post" action="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}" id="delete_task">
                                                 {{csrf_field()}}
                                                 {{method_field('delete')}}
                                             </form>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

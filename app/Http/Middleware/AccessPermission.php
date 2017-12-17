@@ -26,8 +26,11 @@ class AccessPermission
                 {
                     if($url5 = \Request::segment(5))
                     {
-                        if($url6 = \Request::segment(6)){
-                            if(strtolower($method) == "delete"){
+                        if($url6 = \Request::segment(6))
+                        {
+                            if($url7 = \Request::segment(7)){
+                                $url = $url5.'/'.$url7;
+                            }else if(strtolower($method) == "delete"){
                                 $url = $url5.'/delete';
                             }else if(strtolower($method) == "put"){
                                 $url = $url5.'/edit';
@@ -45,9 +48,15 @@ class AccessPermission
                         $url = $url3.'/delete';
                     }else if(strtolower($method) == "put"){
                         $url =  $url3.'/edit';
+                    }else if($url4 == 'create'){
+                        $url = $url3.'/create';
                     }else{
                         $url = $url.'/'.$url3;
                     }
+                }else if(strtolower($method) == "delete"){
+                    $url .= '/delete';
+                }else if(strtolower($method) == "put"){
+                    $url .= '/edit';
                 }else{
                     $url .= '/'.$url3;
                 }
@@ -55,6 +64,8 @@ class AccessPermission
                 $url .= '/delete';
             }else if(strtolower($method) == "put"){
                 $url .= '/edit';
+            }else if($url2 == 'create'){
+                $url = $url.'/create';
             }
         }
 
