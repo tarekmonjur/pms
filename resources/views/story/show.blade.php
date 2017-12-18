@@ -44,29 +44,80 @@
                             <div class="box-body no-padding">
                                 <div class="list-group">
                                     <div  class="list-group-item list-group-item-action flex-column align-items-start @if($story->story_status == "postponed") label-danger @elseif($story->story_status == "pending") label-warning @elseif($story->story_status == "progress") label-info @elseif($story->story_status == "done") label-success @endif">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h4 class="mb-1" style="font-weight: bold">{{$story->story_title}}</h4>
+                                        <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h4 class="mb-1" style="font-weight: bold">{{$story->story_title}}</h4>
+                                            </div>
+                                            <p class="mb-1">Start Date : {{$story_start}}</p>
+                                            <p class="mb-1">End Date : {{$story_end}}</p>
+                                            <p class="mb-1">Story Status : {{$story->story_status}}</p>
+                                            <p class="mb-1">{{$story->story_details}}</p>
+                                            <div class="btn-group">
+                                                @if(canAccess("stories/edit"))
+                                                <a href="#" class="btn btn-default btn-xs"  onclick="editStory('{{$story->project_id}}','{{$story->id}}')">Edit</a>
+                                                @endif
+                                                @if(canAccess("stories/delete"))
+                                                <a href="#" class="btn btn-default btn-xs" onclick="return confirmDelete('delete', 'Are you sure delete this story?', 'delete_story')">Delete</a>
+                                                <form method="post" action="{{url('/projects/'.$story->project_id.'/stories/'.$story->id)}}" id="delete_story">
+                                                    {{csrf_field()}}
+                                                    {{method_field('delete')}}
+                                                </form>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <p class="mb-1">Start Date : {{$story_start}}</p>
-                                        <p class="mb-1">End Date : {{$story_end}}</p>
-                                        <p class="mb-1">Story Status : {{$story->story_status}}</p>
-                                        <p class="mb-1">{{$story->story_details}}</p>
-                                        <div class="btn-group">
-                                            @if($story->story_doc)
-                                                <a target="_blank" href="{{asset('uploads/projects/'.$story->story_doc)}}" class="btn btn-default btn-xs">View Document</a>
+                                        <div class="col-md-6">
+                                            @if(canAccess("stories/create"))
+                                                <form action="{{url('stories/document')}}" method="post" enctype="multipart/form-data" style="margin-top: 50px">
+                                                    {{csrf_field()}}
+                                                    <input type="hidden" value="{{$story->project_id}}" name="project_id">
+                                                    <input type="hidden" value="{{$story->id}}" name="story_id">
+                                                    <div class="form-group">
+                                                        <label for="project_title">Upload Story Files</label>
+                                                        <input type="file" name="document" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="submit" class="btn btn-default" value="Upload">
+                                                    </div>
+                                                </form>
                                             @endif
-                                            @if(canAccess("stories/edit"))
-                                            <a href="#" class="btn btn-default btn-xs"  onclick="editStory('{{$story->project_id}}','{{$story->id}}')">Edit</a>
-                                            @endif
-                                            @if(canAccess("stories/delete"))
-                                            <a href="#" class="btn btn-default btn-xs" onclick="return confirmDelete('delete', 'Are you sure delete this story?', 'delete_story')">Delete</a>
-                                            <form method="post" action="{{url('/projects/'.$story->project_id.'/stories/'.$story->id)}}" id="delete_story">
-                                                {{csrf_field()}}
-                                                {{method_field('delete')}}
-                                            </form>
-                                            @endif
+                                        </div>
                                         </div>
                                     </div>
+                                </div>
+                                <h4>Story Documents</h4>
+                                <div class="row">
+                                    @foreach($story->documents as $document)
+                                        <div class="col-md-2">
+                                            <div class="thumbnail">
+                                                <?php $ext = explode('.', $document->document); if(in_array($ext[1], ['jpg','jpeg','png','gif'])){?>
+                                                <a target="_blank" href="{{asset('uploads/projects/'.$document->document)}}">
+                                                    <img src="{{asset('uploads/projects/'.$document->document)}}" alt="">
+                                                </a>
+                                                <?php }else {?>
+                                                <a target="_blank" href="{{asset('uploads/projects/'.$document->document)}}">
+                                                    @if(in_array($ext[1], ['doc','docx']))
+                                                        <i class="fa fa-file-word-o" style="font-size: 130px; margin-left: 10px"></i>
+                                                    @elseif($ext[1] == 'pdf')
+                                                        <i class="fa fa-file-pdf-o text-danger" style="font-size: 130px; margin-left: 10px"></i>
+                                                    @elseif($ext[1] == 'pptx')
+                                                        <i class="fa fa-file-powerpoint-o" style="font-size: 130px; margin-left: 10px"></i>
+                                                    @endif
+                                                </a>
+                                                <?php }?>
+                                                <div class="caption">
+                                                    <p>{{$document->created_at}}</p>
+                                                    @if(canAccess("stories/delete"))
+                                                    <p><a onclick="confirmDelete('Delete', 'Are you sure delete this document?','document_{{$document->id}}')" class="btn btn-xs btn-danger" role="button">Delete</a></p>
+                                                    <form id="document_{{$document->id}}" action="{{url('stories/document/'.$document->id)}}" method="post">
+                                                        {{csrf_field()}}
+                                                        {{method_field('delete')}}
+                                                    </form>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

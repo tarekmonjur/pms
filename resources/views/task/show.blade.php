@@ -42,29 +42,81 @@
                             <div class="box-body no-padding">
                                 <div class="list-group">
                                     <div  class="list-group-item list-group-item-action flex-column align-items-start">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h4 class="mb-1" style="font-weight: bold">{{$task->task_title}}</h4>
+                                        <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h4 class="mb-1" style="font-weight: bold">{{$task->task_title}}</h4>
+                                            </div>
+                                            <p class="mb-1">Start Date : {{$task->task_start_date}}</p>
+                                            <p class="mb-1">End Date : {{$task->task_end_date}}</p>
+                                            <p class="mb-1">Story Status : <label class="label @if($task->task_status == "pending") label-warning @elseif($task->task_status == "pending") label-primary @elseif($task->task_status == "postponed") label-danger @elseif($task->task_status == "done") label-success @endif">{{$task->task_status}}</label></p>
+                                            <p class="mb-1">{{$task->details_details}}</p>
+                                            <div class="btn-group">
+                                                @if(canAccess("tasks/edit"))
+                                                <a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/edit')}}" class="btn btn-primary btn-xs">Edit</a>
+                                                @endif
+                                                @if(canAccess("tasks/delete"))
+                                                <a href="#" class="btn btn-danger btn-xs" onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_task')">Delete</a>
+                                                <form method="post" action="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}" id="delete_task">
+                                                    {{csrf_field()}}
+                                                    {{method_field('delete')}}
+                                                </form>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <p class="mb-1">Start Date : {{$task->task_start_date}}</p>
-                                        <p class="mb-1">End Date : {{$task->task_end_date}}</p>
-                                        <p class="mb-1">Story Status : <label class="label @if($task->task_status == "pending") label-warning @elseif($task->task_status == "pending") label-primary @elseif($task->task_status == "postponed") label-danger @elseif($task->task_status == "done") label-success @endif">{{$task->task_status}}</label></p>
-                                        <p class="mb-1">{{$task->details_details}}</p>
-                                        <div class="btn-group">
-                                            @if($task->task_doc)
-                                                <a target="_blank" href="{{asset('uploads/tasks/'.$task->task_doc)}}" class="btn btn-success btn-xs">View Document</a>
+                                        <div class="col-md-6">
+                                            @if(canAccess("tasks/create"))
+                                                <form action="{{url('tasks/document')}}" method="post" enctype="multipart/form-data" style="margin-top: 50px">
+                                                    {{csrf_field()}}
+                                                    <input type="hidden" value="{{$task->project_id}}" name="project_id">
+                                                    <input type="hidden" value="{{$task->story_id}}" name="story_id">
+                                                    <input type="hidden" value="{{$task->id}}" name="task_id">
+                                                    <div class="form-group">
+                                                        <label for="project_title">Upload Task Files</label>
+                                                        <input type="file" name="document" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="submit" class="btn btn-default" value="Upload">
+                                                    </div>
+                                                </form>
                                             @endif
-                                            @if(canAccess("tasks/edit"))
-                                            <a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/edit')}}" class="btn btn-primary btn-xs">Edit</a>
-                                            @endif
-                                            @if(canAccess("tasks/delete"))
-                                            <a href="#" class="btn btn-danger btn-xs" onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_task')">Delete</a>
-                                            <form method="post" action="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id)}}" id="delete_task">
-                                                {{csrf_field()}}
-                                                {{method_field('delete')}}
-                                            </form>
-                                            @endif
+                                        </div>
                                         </div>
                                     </div>
+                                </div>
+                                <h4>Task Documents</h4>
+                                <div class="row">
+                                    @foreach($task->documents as $document)
+                                        <div class="col-md-2">
+                                            <div class="thumbnail">
+                                                <?php $ext = explode('.', $document->document); if(in_array($ext[1], ['jpg','jpeg','png','gif'])){?>
+                                                <a target="_blank" href="{{asset('uploads/projects/'.$document->document)}}">
+                                                    <img src="{{asset('uploads/projects/'.$document->document)}}" alt="">
+                                                </a>
+                                                <?php }else {?>
+                                                <a target="_blank" href="{{asset('uploads/projects/'.$document->document)}}">
+                                                    @if(in_array($ext[1], ['doc','docx']))
+                                                        <i class="fa fa-file-word-o" style="font-size: 130px; margin-left: 10px"></i>
+                                                    @elseif($ext[1] == 'pdf')
+                                                        <i class="fa fa-file-pdf-o text-danger" style="font-size: 130px; margin-left: 10px"></i>
+                                                    @elseif($ext[1] == 'pptx')
+                                                        <i class="fa fa-file-powerpoint-o" style="font-size: 130px; margin-left: 10px"></i>
+                                                    @endif
+                                                </a>
+                                                <?php }?>
+                                                <div class="caption">
+                                                    <p>{{$document->created_at}}</p>
+                                                    @if(canAccess("tasks/delete"))
+                                                        <p><a onclick="confirmDelete('Delete', 'Are you sure delete this document?','document_{{$document->id}}')" class="btn btn-xs btn-danger" role="button">Delete</a></p>
+                                                        <form id="document_{{$document->id}}" action="{{url('tasks/document/'.$document->id)}}" method="post">
+                                                            {{csrf_field()}}
+                                                            {{method_field('delete')}}
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

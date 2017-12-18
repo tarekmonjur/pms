@@ -98,24 +98,6 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group {{ $errors->has('project_document') ? ' has-error' : '' }}">
-                                        <label for="project_document">Project Document</label>
-                                        <input type="file" class="form-control" name="project_document">
-                                        @if ($errors->has('project_document'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('project_document') }}</strong>
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-2" style="margin-top: 15px">
-                                    @if($project->project_doc)
-                                    <a href="{{asset('uploads/projects/'.$project->project_doc)}}">View Project Document</a>
-                                    @else
-                                    <a href="#">No Project Document</a>
-                                    @endif
-                                </div>
                             </div>
 
                             <div class="row">

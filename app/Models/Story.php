@@ -40,4 +40,8 @@ class Story extends Model
     {
         return $this->hasMany('App\Models\Task');
     }
+
+    public function documents(){
+        return $this->hasMany('App\Models\Document');
+    }
 }

@@ -43,31 +43,81 @@
                         <div class="tab-pane active" id="project">
                             <div class="box-body no-padding">
                                 <div class="list-group">
-                                    <div  class="list-group-item list-group-item-action flex-column align-items-start @if($project->project_status == "initiate") label-primary @elseif($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h4 class="mb-1" style="font-weight: bold">{{$project->project_title}}</h4>
+                                    <div class="list-group-item list-group-item-action flex-column align-items-start @if($project->project_status == "initiate") label-primary @elseif($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">
+                                        <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h4 class="mb-1" style="font-weight: bold">{{$project->project_title}}</h4>
+                                            </div>
+                                            <p class="mb-1">Project Team :
+                                                @foreach($project->teams($project->project_team) as $team)
+                                                    {{$loop->iteration}} . <a href="{{url('teams')}}" style="color: white">{{$team->team_name}}</a><br>
+                                                @endforeach
+                                            </p>
+                                            <p class="mb-1">Start Date : {{$project->project_start_date}}</p>
+                                            <p class="mb-1">End Date : {{$project->project_end_date}}</p>
+                                            <p class="mb-1">Project Status : {{$project->project_status}}</p>
+                                            <p class="mb-1">{{$project->project_details}}</p>
+                                            <div class="btn-group">
+                                                @if(canAccess("projects/edit"))
+                                                <a href="{{url('projects/'.$project->id.'/edit')}}" class="btn btn-default btn-xs">Edit</a>
+                                                @endif
+                                                @if(canAccess("projects/delete"))
+                                                <a href="#" class="btn btn-default btn-xs" onclick="storyDelete('{{url('projects/'.$project->id)}}', 'project')">Delete</a>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <p class="mb-1">Project Team :
-                                            @foreach($project->teams($project->project_team) as $team)
-                                                {{$loop->iteration}} . <a href="{{url('teams')}}" style="color: white">{{$team->team_name}}</a><br>
-                                            @endforeach
-                                        </p>
-                                        <p class="mb-1">Start Date : {{$project->project_start_date}}</p>
-                                        <p class="mb-1">End Date : {{$project->project_end_date}}</p>
-                                        <p class="mb-1">Project Status : {{$project->project_status}}</p>
-                                        <p class="mb-1">{{$project->project_details}}</p>
-                                        <div class="btn-group">
-                                            @if($project->project_doc)
-                                                <a target="_blank" href="{{asset('uploads/projects/'.$project->project_doc)}}" class="btn btn-default btn-xs">View Document</a>
-                                            @endif
-                                            @if(canAccess("projects/edit"))
-                                            <a href="{{url('projects/'.$project->id.'/edit')}}" class="btn btn-default btn-xs">Edit</a>
-                                            @endif
-                                            @if(canAccess("projects/delete"))
-                                            <a href="#" class="btn btn-default btn-xs" onclick="storyDelete('{{url('projects/'.$project->id)}}', 'project')">Delete</a>
+                                        <div class="col-md-6">
+                                            @if(canAccess("projects/create"))
+                                            <form action="{{url('projects/document')}}" method="post" enctype="multipart/form-data" style="margin-top: 50px">
+                                                {{csrf_field()}}
+                                                <input type="hidden" value="{{$project->id}}" name="project_id">
+                                                <div class="form-group">
+                                                    <label for="project_title">Upload Project Files</label>
+                                                    <input type="file" name="document" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="submit" class="btn btn-default" value="Upload">
+                                                </div>
+                                            </form>
                                             @endif
                                         </div>
                                     </div>
+                                    </div>
+                                </div>
+                                <h4>Project Documents</h4>
+                                <div class="row">
+                                    @foreach($project->documents as $document)
+                                    <div class="col-md-2">
+                                        <div class="thumbnail">
+                                            <?php $ext = explode('.', $document->document); if(in_array($ext[1], ['jpg','jpeg','png','gif','psd'])){?>
+                                            <a target="_blank" href="{{asset('uploads/projects/'.$document->document)}}">
+                                                <img src="{{asset('uploads/projects/'.$document->document)}}" alt="">
+                                            </a>
+                                            <?php }else {?>
+                                            <a target="_blank" href="{{asset('uploads/projects/'.$document->document)}}">
+                                                @if(in_array($ext[1], ['doc','docx']))
+                                                    <i class="fa fa-file-word-o" style="font-size: 130px; margin-left: 10px"></i>
+                                                @elseif($ext[1] == 'pdf')
+                                                    <i class="fa fa-file-pdf-o text-danger" style="font-size: 130px; margin-left: 10px"></i>
+                                                @elseif($ext[1] == 'pptx')
+                                                    <i class="fa fa-file-powerpoint-o" style="font-size: 130px; margin-left: 10px"></i>
+                                                @endif
+                                            </a>
+                                            <?php }?>
+                                            <div class="caption">
+                                                <p>{{$document->created_at}}</p>
+                                                @if(canAccess("projects/delete"))
+                                                <p><a onclick="confirmDelete('Delete', 'Are you sure delete this document?','document_{{$document->id}}')" class="btn btn-xs btn-danger" role="button">Delete</a></p>
+                                                <form id="document_{{$document->id}}" action="{{url('projects/document/'.$document->id)}}" method="post">
+                                                    {{csrf_field()}}
+                                                    {{method_field('delete')}}
+                                                </form>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

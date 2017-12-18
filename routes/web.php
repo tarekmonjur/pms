@@ -85,6 +85,14 @@ Route::resource('projects/{project}/stories/{story}/tasks', 'Task\TaskController
  */
 Route::resource('tasks/{task}/comments', 'Task\CommentController');
 
+Route::post('projects/document', 'DocumentController@documentUpload');
+Route::post('stories/document', 'DocumentController@documentUpload');
+Route::post('tasks/document', 'DocumentController@documentUpload');
+
+Route::delete('projects/document/{id}', 'DocumentController@destroy');
+Route::delete('stories/document/{id}', 'DocumentController@destroy');
+Route::delete('tasks/document/{id}', 'DocumentController@destroy');
+
 
 
 

@@ -17,7 +17,6 @@ class CreateProjectsTable extends Migration
             $table->increments('id');
             $table->string('project_title');
             $table->string('project_team')->nullable();
-            $table->string('project_doc')->nullable();
             $table->date('project_start_date')->nullable();
             $table->date('project_end_date')->nullable();
             $table->enum('project_status', ['initiate','pending', 'progress', 'done']);

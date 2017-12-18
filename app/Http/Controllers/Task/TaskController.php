@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Task;
 use App\Jobs\TaskCreateActivityJob;
 use App\Jobs\TaskUpdateActivityJob;
 use App\Models\Activity;
+use App\Models\Document;
 use App\Models\Project;
 use App\Models\Story;
 use App\Models\Task;
@@ -110,14 +111,20 @@ class TaskController extends Controller
             $task->task_status = $request->task_status;
             $task->assign_by = $request->assign_by;
             $task->assign_to = $request->assign_to;
-            if($request->hasFile('task_document')){
-                $fileName = time().'.'.$request->task_document->extension();
-                $uploadPath = public_path('uploads/tasks');
-                $request->task_document->move($uploadPath, $fileName);
-                $task->task_doc = $fileName;
-            }
             $task->created_by = $this->auth->id;
             $task->save();
+
+            if($request->hasFile('task_document')){
+                $fileName = time().'.'.$request->task_document->extension();
+                $uploadPath = public_path('uploads/projects');
+                $request->task_document->move($uploadPath, $fileName);
+                $document = new Document;
+                $document->project_id = $task->project_id;
+                $document->story_id = $task->story_id;
+                $document->task_id = $task->id;
+                $document->document = $fileName;
+                $document->save();
+            }
 
             TaskCreateActivityJob::dispatch($task);
 
@@ -189,12 +196,6 @@ class TaskController extends Controller
             $task->task_status = $request->task_status;
             $task->assign_by = $request->assign_by;
             $task->assign_to = $request->assign_to;
-            if($request->hasFile('task_document')){
-                $fileName = time().'.'.$request->task_document->extension();
-                $uploadPath = public_path('uploads/tasks');
-                $request->task_document->move($uploadPath, $fileName);
-                $task->task_doc = $fileName;
-            }
             $task->updated_by = $this->auth->id;
             $task->save();
 

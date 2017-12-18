@@ -37,5 +37,9 @@ class Project extends Model
         return $this->hasMany('App\Models\Story');
     }
 
+    public function documents(){
+        return $this->hasMany('App\Models\Document');
+    }
+
 
 }

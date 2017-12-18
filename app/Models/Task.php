@@ -47,4 +47,8 @@ class Task extends Model
     {
         return $this->hasMany('App\Models\TaskComment');
     }
+
+    public function documents(){
+        return $this->hasMany('App\Models\Document');
+    }
 }

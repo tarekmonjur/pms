@@ -74,7 +74,7 @@ class StoryController extends Controller
         $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
         $task_access = Access::get_access_task_by_user_id_story_id($this->auth->id, $story);
 
-        $data['story'] = Story::with(['project','tasks'=>function($q)use($task_access){
+        $data['story'] = Story::with(['documents','project','tasks'=>function($q)use($task_access){
                 $q->whereIn('id', $task_access);
             },'tasks.assignBy', 'tasks.assignTo'])
             ->whereIn('id', $story_access)

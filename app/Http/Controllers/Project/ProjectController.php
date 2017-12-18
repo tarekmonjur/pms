@@ -6,6 +6,7 @@ use App\Jobs\ProjectCreateActivityJob;
 use App\Jobs\ProjectUpdateActivityJob;
 use App\Models\Access;
 use App\Models\Activity;
+use App\Models\Document;
 use App\Models\Project;
 use App\Models\Story;
 use App\Models\Task;
@@ -77,14 +78,18 @@ class ProjectController extends Controller
             $project->project_end_date = $request->project_end_date;
             $project->project_status = $request->project_status;
             $project->project_details = $request->project_details;
+            $project->created_by = $this->auth->id;
+            $project->save();
+
             if($request->hasFile('project_document')){
                 $fileName = time().'.'.$request->project_document->extension();
                 $uploadPath = public_path('uploads/projects');
                 $request->project_document->move($uploadPath, $fileName);
-                $project->project_doc = $fileName;
+                $document = new Document;
+                $document->project_id = $project->id;
+                $document->document = $fileName;
+                $document->save();
             }
-            $project->created_by = $this->auth->id;
-            $project->save();
 
             ProjectCreateActivityJob::dispatch($project);
 
@@ -102,7 +107,7 @@ class ProjectController extends Controller
         $project_access = Access::get_access_project_by_user_id($this->auth->id);
         $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
 
-        $data['project'] = Project::with(['stories' => function($q)use($story_access){
+        $data['project'] = Project::with(['documents','stories' => function($q)use($story_access){
                 $q->whereIn('id', $story_access);
             },'tasks'])
             ->whereIn('id', $project_access)
@@ -196,12 +201,6 @@ class ProjectController extends Controller
             $project->project_status = $request->project_status;
             $project->project_details = $request->project_details;
             $project->updated_by = $this->auth->id;
-            if($request->hasFile('project_document')){
-                $fileName = time().'.'.$request->project_document->extension();
-                $uploadPath = public_path('uploads/projects');
-                $request->project_document->move($uploadPath, $fileName);
-                $project->project_doc = $fileName;
-            }
             $project->save();
 
             ProjectUpdateActivityJob::dispatch($project);
