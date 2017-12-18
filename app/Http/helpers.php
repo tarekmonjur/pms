@@ -94,7 +94,7 @@ function getOnlyPermission()
 
     $onlyPermissions = [];
     foreach ($permissions as $permission){
-        $onlyPermissions = array_merge($onlyPermissions, $permission['permission']);
+        $onlyPermissions = array_merge($onlyPermissions, array_keys($permission['permission']));
     }
     return $onlyPermissions;
 }

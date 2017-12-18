@@ -69,7 +69,7 @@
                                                     <td>
                                                         <select name="user_ids[]" id="" class="form-control">
                                                             @foreach($member->user->department->users as $duser)
-                                                                <option value="{{$duser->id}}">{{$duser->fullname}}</option>
+                                                                <option value="{{$duser->id}}" @if($member->user->id == $duser->id) selected @endif>{{$duser->fullname}}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
