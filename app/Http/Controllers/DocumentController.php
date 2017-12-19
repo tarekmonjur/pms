@@ -76,7 +76,12 @@ class DocumentController extends Controller
 
     private function upload($request)
     {
-        $fileName = time().'.'.$request->document->extension();
+        if($request->has('document_name') && !empty($request->document_name)){
+            $string = str_replace(' ', '-', $request->document_name);
+            $fileName =  preg_replace('/[^A-Za-z0-9\-]/', '', $string).'.'.$request->document->extension();
+        }else {
+            $fileName = time() . '.' . $request->document->extension();
+        }
         $uploadPath = public_path('uploads/projects');
         $request->document->move($uploadPath, $fileName);
         return $fileName;

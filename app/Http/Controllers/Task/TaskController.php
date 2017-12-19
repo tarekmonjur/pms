@@ -139,7 +139,7 @@ class TaskController extends Controller
 
     public function show(Request $request)
     {
-        $data['task'] = Task::with('comments.user', 'assignTo', 'assignBy')
+        $data['task'] = Task::with('documents.project','documents.story','documents.task','comments.user', 'assignTo', 'assignBy')
             ->where('project_id', $request->project)
             ->where('story_id', $request->story)
             ->find($request->task);

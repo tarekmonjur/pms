@@ -65,26 +65,16 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            @if(canAccess("tasks/create"))
-                                                <form action="{{url('tasks/document')}}" method="post" enctype="multipart/form-data" style="margin-top: 50px">
-                                                    {{csrf_field()}}
-                                                    <input type="hidden" value="{{$task->project_id}}" name="project_id">
-                                                    <input type="hidden" value="{{$task->story_id}}" name="story_id">
-                                                    <input type="hidden" value="{{$task->id}}" name="task_id">
-                                                    <div class="form-group">
-                                                        <label for="project_title">Upload Task Files</label>
-                                                        <input type="file" name="document" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="submit" class="btn btn-default" value="Upload">
-                                                    </div>
-                                                </form>
-                                            @endif
+
                                         </div>
                                         </div>
                                     </div>
                                 </div>
-                                <h4>Task Documents</h4>
+                                <h4>Task Documents
+                                    @if(canAccess("tasks/create"))
+                                        <a class="btn btn-primary pull-right" href="#" data-toggle="modal" data-target="#upload_document_modal">Upload Document</a>
+                                    @endif
+                                </h4>
                                 <div class="row">
                                     @foreach($task->documents as $document)
                                         <div class="col-md-2">
@@ -105,7 +95,13 @@
                                                 </a>
                                                 <?php }?>
                                                 <div class="caption">
-                                                    <p>{{$document->created_at}}</p>
+                                                    <p>{{$document->document}}</p>
+                                                    @if($document->project)<p><strong>Project : </strong> <a
+                                                                href="{{url('projects/'.$document->project_id)}}">{{$document->project->project_title}}</a></p>@endif
+                                                    @if($document->story)<p><strong>Story : </strong> <a
+                                                                href="{{url('projects/'.$document->project_id.'/stories/'.$document->story_id)}}">{{$document->story->story_title}}</a></p>@endif
+                                                    @if($document->task)<p><strong>Task : </strong> <a
+                                                                href="{{url('projects/'.$document->project_id.'/stories/'.$document->story_id.'/tasks/'.$document->task_id)}}">{{$document->task->task_title}}</a></p>@endif
                                                     @if(canAccess("tasks/delete"))
                                                         <p><a onclick="confirmDelete('Delete', 'Are you sure delete this document?','document_{{$document->id}}')" class="btn btn-xs btn-danger" role="button">Delete</a></p>
                                                         <form id="document_{{$document->id}}" action="{{url('tasks/document/'.$document->id)}}" method="post">
@@ -144,6 +140,40 @@
             </div>
         </div>
     </section>
+
+    {{--upload document modal--}}
+    <div class="modal" id="upload_document_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Project Document Upload</h4>
+                </div>
+                <form action="{{url('tasks/document')}}" id="document_form" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        {{csrf_field()}}
+                        <input type="hidden" value="{{$task->project_id}}" name="project_id">
+                        <input type="hidden" value="{{$task->story_id}}" name="story_id">
+                        <input type="hidden" value="{{$task->id}}" name="task_id">
+                        <div class="form-group">
+                            <label for="document_name">Document File Name</label>
+                            <input type="text" name="document_name" class="form-control" placeholder="Enter document file name... (optional)">
+                        </div>
+                        <div class="form-group">
+                            <label for="document">Upload Project Files</label>
+                            <input type="file" name="document" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="story">Upload</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -278,6 +308,14 @@
 
                     callback.call(this, data);
                 }
+            });
+
+            $("#document_form").validate({
+                rules: {
+                    document: {
+                        required: true,
+                    }
+                },
             });
 
         });

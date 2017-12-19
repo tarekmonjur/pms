@@ -107,7 +107,7 @@ class ProjectController extends Controller
         $project_access = Access::get_access_project_by_user_id($this->auth->id);
         $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
 
-        $data['project'] = Project::with(['documents','stories' => function($q)use($story_access){
+        $data['project'] = Project::with(['documents.story','documents.task','stories' => function($q)use($story_access){
                 $q->whereIn('id', $story_access);
             },'tasks'])
             ->whereIn('id', $project_access)
