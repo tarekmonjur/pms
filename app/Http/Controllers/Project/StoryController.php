@@ -6,6 +6,7 @@ use App\Jobs\StoryCreateActivityJob;
 use App\Jobs\StoryUpdateActivityJob;
 use App\Models\Access;
 use App\Models\Activity;
+use App\Models\Project;
 use App\Models\Story;
 use App\Models\Task;
 use App\Models\TeamMember;
@@ -71,21 +72,33 @@ class StoryController extends Controller
 
     public function show($project, $story)
     {
-        $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
-        $task_access = Access::get_access_task_by_user_id_story_id($this->auth->id, $story);
+        $is_project_owner = (Project::where('created_by', $this->auth->id)->count() > 0)?true:false;
+        if($is_project_owner === false) {
+            $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
+            $task_access = Access::get_access_task_by_user_id_story_id($this->auth->id, $story);
+        }else{
+            $story_access = [];
+            $task_access = [];
+        }
 
-        $data['story'] = Story::with(['documents.project','documents.story','documents.task','project','tasks'=>function($q)use($task_access){
-                $q->whereIn('id', $task_access);
-            },'tasks.assignBy', 'tasks.assignTo'])
-            ->whereIn('id', $story_access)
-            ->find($story);
+        $data['story'] = Story::with(['documents.project','documents.story','documents.task','project','tasks'=>function($q)use($task_access, $is_project_owner){
+                if($is_project_owner === false) {
+                    $q->whereIn('id', $task_access);
+                }
+            },'tasks.assignBy', 'tasks.assignTo']);
+        if($is_project_owner === false) {
+            $data['story']->whereIn('id', $story_access);
+        }
+        $data['story'] = $data['story']->find($story);
 
         if(!$data['story']){return redirect()->back();}
 
         $story_start_end =  Task::with('story')
-            ->where('story_id', $story)
-            ->whereIn('id', $task_access)
-            ->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
+            ->where('story_id', $story);
+        if($is_project_owner === false) {
+            $story_start_end->whereIn('id', $task_access);
+        }
+        $story_start_end = $story_start_end->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
             ->groupBy('story_id')
             ->first();
 

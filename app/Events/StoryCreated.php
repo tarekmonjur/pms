@@ -40,13 +40,9 @@ class StoryCreated
             $team_members = User::whereRaw("id in (".$this->story->story_member.")")->get();
             if(count($team_members)>0){
                 foreach($team_members as $team_member){
-                    $accesses[] = [
-                        'user_id' => $team_member->id,
-                        'user_type' => $team_member->user_type,
-                        'project_id' => $this->story->project_id,
-                        'story_id' => $this->story->id,
-                        'task_id' => '',
-                    ];
+                    if($this->story->created_by != $team_member->id) {
+                        $accesses[] = ['user_id' => $team_member->id, 'user_type' => $team_member->user_type, 'project_id' => $this->story->project_id, 'story_id' => $this->story->id, 'task_id' => '',];
+                    }
                 }
             }
         }

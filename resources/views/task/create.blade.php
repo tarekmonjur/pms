@@ -161,9 +161,9 @@
                                     <div class="form-group {{ $errors->has('assign_by') ? ' has-error' : '' }}">
                                         <label for="assign_by">Task Assign By</label>
                                         <select name="assign_by" id="assign_by" class="form-control">
-                                            <option value="0">--- Select Assign By ---</option>
+                                            <option value="">--- Select Assign By ---</option>
                                             @foreach($users as $user)
-                                                <option value="{{$user->id}}">{{$user->fullname}}</option>
+                                                <option value="{{$user->id}}" @if($auth->id == $user->id) selected @endif>{{$user->fullname}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('assign_by'))
@@ -177,9 +177,9 @@
                                     <div class="form-group {{ $errors->has('assign_to') ? ' has-error' : '' }}">
                                         <label for="assign_to">Task Assign To</label>
                                         <select name="assign_to" id="assign_to" class="form-control">
-                                            <option value="0">--- Select Assign To ---</option>
-                                            @foreach($users as $user)
-                                                <option value="{{$user->id}}">{{$user->fullname}}</option>
+                                            <option value="">--- Select Assign To ---</option>
+                                            @foreach($members as $member)
+                                                <option value="{{$member->id}}">{{$member->fullname}}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('assign_to'))

@@ -64,11 +64,12 @@ class TaskController extends Controller
         if(!empty($request->story)){
             $data['story_id'] = $request->story;
             $data['story'] = Story::find($request->story);
-            $data['users'] = $data['story']->members($data['story']->story_member);
+            $data['members'] = $data['story']->members($data['story']->story_member);
+            $data['users'] = $data['story']->members($data['story']->story_member.','.$this->auth->id);
         }else{
             $data['story_id'] = null;
             $data['story'] = (object)[];
-            $data['users'] = User::orderBy('id','desc')->get();
+            $data['users'] = $data['members'] = User::orderBy('id','desc')->get();
         }
 
         if(!empty($request->project)){

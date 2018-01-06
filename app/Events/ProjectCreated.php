@@ -44,13 +44,9 @@ class ProjectCreated
                 ->get();
             if(count($team_members)>0){
                 foreach($team_members as $team_member){
-                    $accesses[] = [
-                        'user_id' => $team_member->id,
-                        'user_type' => $team_member->user_type,
-                        'project_id' => $this->project->id,
-                        'story_id' => '',
-                        'task_id' => '',
-                    ];
+                    if($this->project->created_by != $team_member->id){
+                        $accesses[] = ['user_id' => $team_member->id, 'user_type' => $team_member->user_type, 'project_id' => $this->project->id, 'story_id' => '', 'task_id' => '',];
+                    }
                 }
             }
         }

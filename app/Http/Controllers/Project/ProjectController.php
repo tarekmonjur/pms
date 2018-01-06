@@ -104,11 +104,19 @@ class ProjectController extends Controller
 
     public function show($project)
     {
+        $is_project_owner = (Project::where('created_by', $this->auth->id)->count() > 0)?true:false;
         $project_access = Access::get_access_project_by_user_id($this->auth->id);
-        $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
 
-        $data['project'] = Project::with(['documents.story','documents.task','stories' => function($q)use($story_access){
-                $q->whereIn('id', $story_access);
+        if($is_project_owner === false) {
+            $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
+        }else{
+            $story_access = [];
+        }
+
+        $data['project'] = Project::with(['documents.story','documents.task','stories' => function($q)use($story_access, $is_project_owner){
+                if($is_project_owner === false) {
+                    $q->whereIn('id', $story_access);
+                }
             },'tasks'])
             ->whereIn('id', $project_access)
             ->find($project);
@@ -116,9 +124,11 @@ class ProjectController extends Controller
         if(!$data['project']){return redirect('projects');}
 
         $calender_stories =  Task::with('story')
-            ->where('project_id', $project)
-            ->whereIn('story_id', $story_access)
-            ->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
+            ->where('project_id', $project);
+        if($is_project_owner === false) {
+            $calender_stories->whereIn('story_id', $story_access);
+        }
+        $calender_stories = $calender_stories->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
             ->groupBy('story_id')
             ->get();
 
