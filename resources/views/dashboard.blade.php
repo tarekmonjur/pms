@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+                    <span class="info-box-icon bg-aqua"><i class="fa fa-gears"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Total Projects</span>
                         <span class="info-box-number">{{$total_project}}</span>
@@ -22,9 +22,9 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-yellow"><i class="fa fa-google-plus"></i></span>
+                    <span class="info-box-icon bg-red-gradient"><i class="fa fa-gear"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Total Pending Projects</span>
+                        <span class="info-box-text">Pending Projects</span>
                         <span class="info-box-number">{{$total_pending_project}}</span>
                     </div>
                 </div>
@@ -35,10 +35,10 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+                    <span class="info-box-icon bg-yellow-gradient"><i class="fa fa-gear"></i></span>
 
                     <div class="info-box-content">
-                        <span class="info-box-text">Total In-progress Projects</span>
+                        <span class="info-box-text">In-progress Projects</span>
                         <span class="info-box-number">{{$total_progress_project}}</span>
                     </div>
                 </div>
@@ -46,10 +46,10 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+                    <span class="info-box-icon bg-green-gradient"><i class="fa fa-gear"></i></span>
 
                     <div class="info-box-content">
-                        <span class="info-box-text">Total Complete Projects</span>
+                        <span class="info-box-text">Complete Projects</span>
                         <span class="info-box-number">{{$total_complete_project}}</span>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+                    <span class="info-box-icon bg-aqua"><i class="fa fa-hourglass-o"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Total Tasks</span>
                         <span class="info-box-number">{{$total_task}}</span>
@@ -71,9 +71,9 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-yellow"><i class="fa fa-google-plus"></i></span>
+                    <span class="info-box-icon bg-red-gradient"><i class="fa fa-hourglass-start"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Total Pending Tasks</span>
+                        <span class="info-box-text">Pending Tasks</span>
                         <span class="info-box-number">{{$total_pending_task}}</span>
                     </div>
                 </div>
@@ -84,10 +84,10 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+                    <span class="info-box-icon bg-yellow-gradient"><i class="fa fa-hourglass-half"></i></span>
 
                     <div class="info-box-content">
-                        <span class="info-box-text">Total In-progress Tasks</span>
+                        <span class="info-box-text">In-progress Tasks</span>
                         <span class="info-box-number">{{$total_progress_task}}</span>
                     </div>
                 </div>
@@ -95,10 +95,10 @@
 
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+                    <span class="info-box-icon bg-green-gradient"><i class="fa fa-hourglass-end"></i></span>
 
                     <div class="info-box-content">
-                        <span class="info-box-text">Total Complete Tasks</span>
+                        <span class="info-box-text">Complete Tasks</span>
                         <span class="info-box-number">{{$total_complete_task}}</span>
                     </div>
                 </div>
