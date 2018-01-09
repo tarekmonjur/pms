@@ -210,6 +210,8 @@
                 format: "yyyy-mm-dd"
             });
 
+//            $('.timepicker').timepicker();
+
             $('.select2').select2();
 
             //iCheck for checkbox and radio inputs

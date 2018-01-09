@@ -72,22 +72,6 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="form-group {{ $errors->has('task_type') ? ' has-error' : '' }}">
-                                        <label for="task_type">Task Type</label>
-                                        <select name="task_type" id="task_type" class="form-control">
-                                            <option value="">--- Select Task Type ---</option>
-                                            <option value="task" @if(old('task_type') == "task") selected @endif>Task</option>
-                                            <option value="bug" @if(old('task_type') == "bug") selected @endif>Bug</option>
-                                            <option value="issue" @if(old('task_type') == "issue") selected @endif>Issue</option>
-                                        </select>
-                                        @if ($errors->has('task_type'))
-                                            <span class="help-block">
-                                        <strong>{{ $errors->first('task_type') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_start_date') ? ' has-error' : '' }}">
                                         <label for="task_start_date">Task Start Date</label>
                                         <input type="text" class="form-control datepicker" name="task_start_date" value="{{ old('task_start_date') }}" placeholder="Enter Task Start Date">
@@ -109,16 +93,44 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group {{ $errors->has('task_work_hour') ? ' has-error' : '' }}">
+                                        <label for="task_end_date">Task Work Hour</label>
+                                        <input type="number" class="form-control" name="task_work_hour" value="{{ old('task_work_hour') }}" placeholder="Enter Task Work Hour">
+                                        @if ($errors->has('task_work_hour'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('task_work_hour') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <div class="form-group {{ $errors->has('task_type') ? ' has-error' : '' }}">
+                                        <label for="task_type">Task Type</label>
+                                        <select name="task_type" id="task_type" class="form-control">
+                                            <option value="">--- Select Task Type ---</option>
+                                            <option value="task" @if(old('task_type') == "task") selected @endif>Task</option>
+                                            <option value="bug" @if(old('task_type') == "bug") selected @endif>Bug</option>
+                                            <option value="issue" @if(old('task_type') == "issue") selected @endif>Issue</option>
+                                        </select>
+                                        @if ($errors->has('task_type'))
+                                            <span class="help-block">
+                                        <strong>{{ $errors->first('task_type') }}</strong>
+                                    </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_status') ? ' has-error' : '' }}">
                                         <label for="task_status">Task Status</label>
                                         <select name="task_status" id="task_type" class="form-control">
                                             <option value="">--- Select Task Status ---</option>
                                             <option value="pending" @if(old('task_type') == "pending") selected @endif>Pending</option>
                                             <option value="progress" @if(old('task_type') == "progress") selected @endif>In Progress</option>
+                                            <option value="paused" @if(old('task_type') == "paused") selected @endif>Paused</option>
                                             <option value="postponed" @if(old('task_type') == "postponed") selected @endif>Postponed</option>
                                             <option value="done" @if(old('task_type') == "done") selected @endif>Done</option>
                                         </select>
@@ -129,7 +141,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group {{ $errors->has('task_document') ? ' has-error' : '' }}">
                                         <label for="task_document">Task Document</label>
                                         <input type="file" class="form-control" name="task_document">

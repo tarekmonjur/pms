@@ -48,7 +48,13 @@ class Task extends Model
         return $this->hasMany('App\Models\TaskComment');
     }
 
-    public function documents(){
+    public function documents()
+    {
         return $this->hasMany('App\Models\Document');
+    }
+
+    public function works()
+    {
+        return $this->hasMany('App\Models\TaskWork');
     }
 }

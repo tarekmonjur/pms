@@ -39,6 +39,7 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" id="task_tabs">
                         <li class="active"><a href="#task" data-toggle="tab">Task</a></li>
+                        <li><a href="#work_tab" data-toggle="tab">Work Summary</a></li>
                         <li><a href="#comment_tab" data-toggle="tab">Comments</a></li>
                         <li><a href="#task_activity" data-toggle="tab">Task Activity</a></li>
                     </ul>
@@ -55,11 +56,18 @@
                                             </div>
                                             <p class="mb-1">Start Date : {{$task->task_start_date}}</p>
                                             <p class="mb-1">End Date : {{$task->task_end_date}}</p>
-                                            <p class="mb-1">Story Status : <label class="label @if($task->task_status == "pending") label-warning @elseif($task->task_status == "pending") label-primary @elseif($task->task_status == "postponed") label-danger @elseif($task->task_status == "done") label-success @endif">{{$task->task_status}}</label></p>
+                                            <p class="mb-1">Task Status : <label class="label @if($task->task_status == "pending") label-warning @elseif($task->task_status == "progress") label-primary @elseif($task->task_status == "paused") label-warning @elseif($task->task_status == "postponed") label-danger @elseif($task->task_status == "done") label-success @endif">{{$task->task_status}}</label></p>
+                                            <p class="mb-1">Task Work Hour: <label class="label label-info">{{$task->task_work_hour}} hour</label></p>
+                                            <p class="mb-1">Total Work Hour: <label class="label label-primary">
+                                                    <?php $total_work_hour = explode('.',$task->works->sum('total_time'));
+                                                        $total_work =  $total_work_hour[0].' hours, '.$total_work_hour[1].' minutes';
+                                                        echo $total_work;
+                                                    ?>
+                                                </label></p>
                                             <p class="mb-1">{{$task->details_details}}</p>
                                             <div class="btn-group">
                                                 @if(canAccess("tasks/edit"))
-                                                <a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/edit')}}" class="btn btn-primary btn-xs">Edit</a>
+                                                <a class="btn btn-primary btn-xs" href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/edit')}}">Edit</a>
                                                 @endif
                                                 @if(canAccess("tasks/delete"))
                                                 <a href="#" class="btn btn-danger btn-xs" onclick="return confirmDelete('delete', 'Are you sure delete this task?', 'delete_task')">Delete</a>
@@ -68,6 +76,12 @@
                                                     {{method_field('delete')}}
                                                 </form>
                                                 @endif
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn btn-xs btn-info" @if($task->task_status != "progress") href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/tracking/start')}}" @else disabled @endif>Start Work</a>
+                                                <a class="btn btn-xs btn-primary" @if($task->task_status == "progress") href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/tracking/end')}}" @else disabled @endif>End Work</a>
+                                                <a class="btn btn-success btn-xs" onclick="return confirmAction('done', 'Are you sure done this task?', '{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/tracking/done')}}')" href="#">Done</a>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -119,6 +133,47 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="work_tab">
+                            <div class="box box-primary">
+                                <div class="box-body">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>SL</th>
+                                            <th>Task Start</th>
+                                            <th>Task End</th>
+                                            <th>Working</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach($task->works as $work)
+                                                <tr>
+                                                    <td>{{$loop->iteration}}</td>
+                                                    <td>{{$work->start_time}}</td>
+                                                    <td>{{$work->end_time}}</td>
+                                                    <td>{{$work->total_time}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="3">Total Working Hour</th>
+                                            <th>{{$total_work}}</th>
+                                        </tr>
+                                        <tr>
+                                            <th>SL</th>
+                                            <th>Task Start</th>
+                                            <th>Task End</th>
+                                            <th>Working</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
                         </div>

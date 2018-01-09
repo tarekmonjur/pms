@@ -21,8 +21,9 @@ class CreateTasksTable extends Migration
             $table->enum('task_type', ['task', 'bug', 'issue']);
             $table->date('task_start_date')->nullable();
             $table->date('task_end_date')->nullable();
+            $table->float('task_work_hour',5,2)->nullable();
             $table->text('task_details')->nullable();
-            $table->enum('task_status', ['pending', 'progress', 'postponed', 'done']);
+            $table->enum('task_status', ['pending', 'progress', 'paused', 'postponed', 'done']);
             $table->integer('assign_by')->unsigned()->default(0);
             $table->integer('assign_to')->unsigned()->default(0);
             $table->integer('created_by')->unsigned()->default(0);
