@@ -59,8 +59,14 @@
                                             <p class="mb-1">Task Status : <label class="label @if($task->task_status == "pending") label-warning @elseif($task->task_status == "progress") label-primary @elseif($task->task_status == "paused") label-warning @elseif($task->task_status == "postponed") label-danger @elseif($task->task_status == "done") label-success @endif">{{$task->task_status}}</label></p>
                                             <p class="mb-1">Task Work Hour: <label class="label label-info">{{$task->task_work_hour}} hour</label></p>
                                             <p class="mb-1">Total Work Hour: <label class="label label-primary">
-                                                    <?php $total_work_hour = explode('.',$task->works->sum('total_time'));
-                                                        $total_work =  $total_work_hour[0].' hours, '.$total_work_hour[1].' minutes';
+                                                    <?php
+                                                        $total_work_hours = $task->works->sum('total_time');
+                                                        $total_work_hour = explode('.',$total_work_hours);
+                                                        $hour = isset($total_work_hour[0])?:'0';
+                                                        $hour .=' hours, ';
+                                                        $minute = isset($total_work_hour[1])?:'0';
+                                                        $minute .=' minutes';
+                                                        $total_work = $hour.$minute ;
                                                         echo $total_work;
                                                     ?>
                                                 </label></p>
