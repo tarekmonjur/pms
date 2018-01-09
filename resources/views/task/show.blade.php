@@ -62,9 +62,9 @@
                                                     <?php
                                                         $total_work_hours = $task->works->sum('total_time');
                                                         $total_work_hour = explode('.',$total_work_hours);
-                                                        $hour = isset($total_work_hour[0])?:'0';
+                                                        $hour = isset($total_work_hour[0])?$total_work_hour[0]:'0';
                                                         $hour .=' hours, ';
-                                                        $minute = isset($total_work_hour[1])?:'0';
+                                                        $minute = isset($total_work_hour[1])?$total_work_hour[1]:'0';
                                                         $minute .=' minutes';
                                                         $total_work = $hour.$minute ;
                                                         echo $total_work;
