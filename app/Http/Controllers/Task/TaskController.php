@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Mockery\Exception;
 
 class TaskController extends Controller
 {
@@ -43,18 +44,19 @@ class TaskController extends Controller
 
     public function index($project,$story)
     {
-        $data['tasks'] = Task::with('project','story','assignBy', 'assignTo')
-            ->where('project_id', $project)
-            ->where('story_id', $story)
-            ->get();
-
-        $data['project_id'] = $project;
-        $data['story_id'] = $story;
-
-        $data['project'] = Project::find($project);
-        $data['story'] = Story::find($story);
-
-        return view('task.index')->with($data);
+         return redirect()->back();
+//        $data['tasks'] = Task::with('project','story','assignBy', 'assignTo')
+//            ->where('project_id', $project)
+//            ->where('story_id', $story)
+//            ->get();
+//
+//        $data['project_id'] = $project;
+//        $data['story_id'] = $story;
+//
+//        $data['project'] = Project::find($project);
+//        $data['story'] = Story::find($story);
+//
+//        return view('task.index')->with($data);
     }
 
 
@@ -117,6 +119,13 @@ class TaskController extends Controller
             $task->assign_to = $request->assign_to;
             $task->created_by = $this->auth->id;
             $task->save();
+
+            if($task->task_status == 'progress'){
+                $task_work = new TaskWork;
+                $task_work->task_id = $request->task;
+                $task_work->start_time = date("Y-m-d h:i:s");
+                $task_work->save();
+            }
 
             if($request->hasFile('task_document')){
                 $fileName = time().'.'.$request->task_document->extension();
@@ -206,6 +215,13 @@ class TaskController extends Controller
             $task->updated_by = $this->auth->id;
             $task->save();
 
+            if($task->task_status == 'progress'){
+                $task_work = new TaskWork;
+                $task_work->task_id = $request->task;
+                $task_work->start_time = date("Y-m-d h:i:s");
+                $task_work->save();
+            }
+
             TaskUpdateActivityJob::dispatch($task);
 
             $request->session()->flash('msg_success', 'Task successfully updated.');
@@ -245,30 +261,34 @@ class TaskController extends Controller
 
     public function taskWorkTracking(Request $request)
     {
-        if($request->status == "start")
-        {
-            $task_work = new TaskWork;
-            $task_work->task_id = $request->task;
-            $task_work->start_time = date("Y-m-d h:i:s");
-            $task_work->save();
+        try {
+            if ($request->status == "start") {
+                $task_work = new TaskWork;
+                $task_work->task_id = $request->task;
+                $task_work->start_time = date("Y-m-d h:i:s");
+                $task_work->save();
 
-            Task::where('id', $request->task)->update(['task_status' => 'progress']);
-            $request->session()->flash("msg_success", "Task time counter start.");
-        }
-        else if($request->status == "end")
-        {
-            $task_work = TaskWork::where('task_id', $request->task)->orderBy('id','desc')->first();
-            $task_work->end_time = date("Y-m-d h:i:s");
-            $diff = date_diff(date_create($task_work->start_time),date_create());
-            $total_time = $diff->h.'.'.$diff->i;
-            $task_work->total_time = $total_time;
-            $task_work->save();
+                Task::where('id', $request->task)->update(['task_status' => 'progress']);
+                $request->session()->flash("msg_success", "Task time counter start.");
+            } else if ($request->status == "end") {
+                $task_work = TaskWork::where('task_id', $request->task)->orderBy('id', 'desc')->first();
+                if($task_work) {
+                    $task_work->end_time = date("Y-m-d h:i:s");
+                    $diff = date_diff(date_create($task_work->start_time), date_create());
+                    $total_time = $diff->h . '.' . $diff->i;
+                    $task_work->total_time = $total_time;
+                    $task_work->save();
+                }
 
-            Task::where('id', $request->task)->update(['task_status' => 'paused']);
-            $request->session()->flash("msg_success", "Task time counter stop.");
-        }else if($request->status == "done"){
-            Task::where('id', $request->task)->update(['task_status' => 'done']);
-            $request->session()->flash("msg_success", "Task status changed to Done.");
+                Task::where('id', $request->task)->update(['task_status' => 'paused']);
+                $request->session()->flash("msg_success", "Task time counter stop.");
+            } else if ($request->status == "done") {
+
+                Task::where('id', $request->task)->update(['task_status' => 'done']);
+                $request->session()->flash("msg_success", "Task status changed to Done.");
+            }
+        }catch(\Exception $e){
+            $request->session()->flash("msg_error", "Task status not changed.");
         }
         return redirect()->back();
     }

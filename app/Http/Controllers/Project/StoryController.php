@@ -33,7 +33,7 @@ class StoryController extends Controller
     {
         $this->middleware('auth');
 //        $this->middleware('permission')->except('store');
-        $this->middleware('permission');
+        $this->middleware('permission')->except(["index", "show"]);
         $this->middleware(function($request, $next){
             $this->auth = Auth::user();
             return $next($request);
@@ -72,35 +72,51 @@ class StoryController extends Controller
 
     public function show($project, $story)
     {
-        $is_project_owner = (Project::where('created_by', $this->auth->id)->count() > 0)?true:false;
-        if($is_project_owner === false) {
-            $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
-            $task_access = Access::get_access_task_by_user_id_story_id($this->auth->id, $story);
-        }else{
-            $story_access = [];
-            $task_access = [];
-        }
+        if(canAccess("stories/tasks"))
+        {
+            $data['story'] = Story::with('documents.project','documents.story','documents.task','project','tasks','tasks.assignBy', 'tasks.assignTo')
+                ->find($story);
 
-        $data['story'] = Story::with(['documents.project','documents.story','documents.task','project','tasks'=>function($q)use($task_access, $is_project_owner){
+            if(!$data['story']){return redirect()->back();}
+
+            $story_start_end =  Task::with('story')
+                ->where('story_id', $story)
+                ->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
+                ->groupBy('story_id')
+                ->first();
+        }
+        else
+        {
+            $is_project_owner = (Project::where('created_by', $this->auth->id)->count() > 0) ? true : false;
+            if ($is_project_owner === false) {
+                $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
+                $task_access = Access::get_access_task_by_user_id_story_id($this->auth->id, $story);
+            }else{
+                $story_access = [];
+                $task_access = [];
+            }
+
+            $data['story'] = Story::with(['documents.project','documents.story','documents.task','project','tasks'=>function($q)use($task_access, $is_project_owner){
                 if($is_project_owner === false) {
                     $q->whereIn('id', $task_access);
                 }
             },'tasks.assignBy', 'tasks.assignTo']);
-        if($is_project_owner === false) {
-            $data['story']->whereIn('id', $story_access);
-        }
-        $data['story'] = $data['story']->find($story);
+            if($is_project_owner === false) {
+                $data['story']->whereIn('id', $story_access);
+            }
+            $data['story'] = $data['story']->find($story);
 
-        if(!$data['story']){return redirect()->back();}
+            if(!$data['story']){return redirect()->back();}
 
-        $story_start_end =  Task::with('story')
-            ->where('story_id', $story);
-        if($is_project_owner === false) {
-            $story_start_end->whereIn('id', $task_access);
+            $story_start_end =  Task::with('story')
+                ->where('story_id', $story);
+            if($is_project_owner === false) {
+                $story_start_end->whereIn('id', $task_access);
+            }
+            $story_start_end = $story_start_end->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
+                ->groupBy('story_id')
+                ->first();
         }
-        $story_start_end = $story_start_end->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
-            ->groupBy('story_id')
-            ->first();
 
         if($story_start_end) {
             $calender_tasks = [];
@@ -131,6 +147,7 @@ class StoryController extends Controller
             $data['story_end'] = '';
             $data['calender_tasks'] = json_encode([]);
         }
+
         $data['activities'] = Activity::where('story_id', (int)$story)->get();
         return view('story.show')->with($data);
     }

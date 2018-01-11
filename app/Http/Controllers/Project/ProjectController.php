@@ -35,7 +35,7 @@ class ProjectController extends Controller
     {
         $this->middleware('auth');
 //        $this->middleware('permission', ['only' => ['create']]);
-        $this->middleware('permission');
+        $this->middleware('permission')->except(["index", "show"]);
         $this->middleware(function($request, $next){
             $this->auth = Auth::user();
             return $next($request);
@@ -47,8 +47,12 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $project_access = Access::get_access_project_by_user_id($this->auth->id);
-        $data['projects'] = Project::whereIn('id', $project_access)->orderBy('id','desc')->get();
+        if(canAccess("projects")) {
+            $project_access = Access::get_access_project_by_user_id($this->auth->id);
+            $data['projects'] = Project::whereIn('id', $project_access)->orderBy('id', 'desc')->get();
+        }else{
+            $data['projects'] = Project::orderBy('id', 'desc')->get();
+        }
         return view('project.index')->with($data);
     }
 
@@ -104,33 +108,49 @@ class ProjectController extends Controller
 
     public function show($project)
     {
-        $is_project_owner = (Project::where('created_by', $this->auth->id)->count() > 0)?true:false;
-        $project_access = Access::get_access_project_by_user_id($this->auth->id);
+        if(canAccess("projects/stories"))
+        {
+            $data['project'] = Project::with('documents.story','documents.task','stories','tasks')
+                ->find($project);
 
-        if($is_project_owner === false) {
-            $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
-        }else{
-            $story_access = [];
+            if(!$data['project']){return redirect('projects');}
+
+            $calender_stories =  Task::with('story')->where('project_id', $project)
+                ->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
+                ->groupBy('story_id')
+                ->get();
         }
+        else
+        {
+            $is_project_owner = (Project::where('created_by', $this->auth->id)->count() > 0) ? true : false;
+            $project_access = Access::get_access_project_by_user_id($this->auth->id);
 
-        $data['project'] = Project::with(['documents.story','documents.task','stories' => function($q)use($story_access, $is_project_owner){
+            if ($is_project_owner === false) {
+                $story_access = Access::get_access_story_by_user_id_project_id($this->auth->id, $project);
+            } else {
+                $story_access = [];
+            }
+
+            $data['project'] = Project::with(['documents.story','documents.task','stories' => function($q)use($story_access, $is_project_owner){
                 if($is_project_owner === false) {
                     $q->whereIn('id', $story_access);
                 }
             },'tasks'])
-            ->whereIn('id', $project_access)
-            ->find($project);
+                ->whereIn('id', $project_access)
+                ->find($project);
 
-        if(!$data['project']){return redirect('projects');}
+            if(!$data['project']){return redirect('projects');}
 
-        $calender_stories =  Task::with('story')
-            ->where('project_id', $project);
-        if($is_project_owner === false) {
-            $calender_stories->whereIn('story_id', $story_access);
+            $calender_stories =  Task::with('story')
+                ->where('project_id', $project);
+            if($is_project_owner === false) {
+                $calender_stories->whereIn('story_id', $story_access);
+            }
+            $calender_stories = $calender_stories->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
+                ->groupBy('story_id')
+                ->get();
         }
-        $calender_stories = $calender_stories->selectRaw("story_id, MIN(task_start_date) as start_date, MAX(task_end_date) as end_date")
-            ->groupBy('story_id')
-            ->get();
+
 
         $calender_story = [];
         foreach($calender_stories as $story){

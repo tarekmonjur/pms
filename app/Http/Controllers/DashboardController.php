@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Access;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -24,7 +26,11 @@ class DashboardController extends Controller
      * DashboardController constructor.
      */
     public function __construct(){
-         $this->middleware('auth');
+        $this->middleware('auth');
+        $this->middleware(function($request, $next){
+            $this->auth = Auth::user();
+            return $next($request);
+        });
     }
 
 
@@ -43,7 +49,12 @@ class DashboardController extends Controller
         $data['total_progress_task'] = Task::where('task_status','progress')->count();
         $data['total_complete_task'] = Task::where('task_status','done')->count();
 
-        $data['projects'] = Project::with('tasks')->get();
+        if(canAccess("projects")) {
+            $data['projects'] = Project::with('tasks')->get();
+        }else{
+            $project_access = Access::get_access_project_by_user_id($this->auth->id);
+            $data['projects'] = Project::with('tasks')->whereIn('id', $project_access)->get();
+        }
         return view('dashboard')->with($data);
     }
 
