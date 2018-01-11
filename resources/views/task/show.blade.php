@@ -87,7 +87,7 @@
                                             <div class="btn-group">
                                                 <a class="btn btn-xs btn-info" @if($task->task_status != "progress") href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/tracking/start')}}" @else disabled @endif>Start Work</a>
                                                 <a class="btn btn-xs btn-primary" @if($task->task_status == "progress") href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/tracking/end')}}" @else disabled @endif>End Work</a>
-                                                <a class="btn btn-success btn-xs" onclick="return confirmAction('done', 'Are you sure done this task?', '{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/tracking/done')}}')" href="#">Done</a>
+                                                <a class="btn btn-success btn-xs" @if($task->task_status == "done") disabled @else onclick="return confirmAction('done', 'Are you sure done this task?', '{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks/'.$task->id.'/tracking/done')}}')" href="#" @endif>Done</a>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
