@@ -204,3 +204,26 @@
     </section>
 
 @endsection
+
+@section('script')
+    <script>
+        $(function(){
+            $(document).on("change", "#project_name", function(){
+                var project_id = $(this).val();
+                project_id = (project_id)?project_id:0;
+                $.ajax({
+                    url: baseUrl+'/get-stories-by-project/'+project_id,
+                    type: 'get',
+                    dataType: 'html',
+                    success:function (data) {
+                        $("#story_name").html(data);
+                    },
+                    error: function (error) {
+                        $("#story_name").html("<option>Connection Problem.</option>");
+                    }
+                });
+            });
+
+        });
+    </script>
+@endsection

@@ -223,7 +223,7 @@
                 var project_id = $(this).val();
                 project_id = (project_id)?project_id:0;
                 $.ajax({
-                    url: baseUrl+'/projects/'+project_id+'/edit',
+                    url: baseUrl+'/get-stories-by-project/'+project_id,
                     type: 'get',
                     dataType: 'html',
                     success:function (data) {

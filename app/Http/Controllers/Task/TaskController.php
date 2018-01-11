@@ -35,7 +35,7 @@ class TaskController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission')->except("taskWorkTracking", "index", "show");
+        $this->middleware('permission')->except("taskWorkTracking", "index", "show", "getStoryByProject");
         $this->middleware(function($request, $next){
             $this->auth = Auth::user();
             return $next($request);
@@ -198,7 +198,7 @@ class TaskController extends Controller
         $data['projects'] = Project::orderBy('id','desc')->get();
         $data['users'] = User::orderBy('id','desc')->get();
         $data['task'] = Task::find($request->task);
-        $data['stories'] = Story::where('id', $data['task']->project_id)->get();
+        $data['stories'] = Story::where('project_id', $data['task']->project_id)->get();
         return view('task.edit')->with($data);
     }
 
@@ -309,6 +309,23 @@ class TaskController extends Controller
             $request->session()->flash("msg_error", "Task status not changed.");
         }
         return redirect()->back();
+    }
+
+
+    public function getStoryByProject(Request $request)
+    {
+        if($request->ajax()){
+            if($request->project_id) {
+                $stories = Story::where('project_id', $request->project_id)->get();
+                $html = "<option value=''>--- Select Story ---</option>";
+                foreach ($stories as $story) {
+                    $html .= "<option value=".$story->id.">".$story->story_title."</option>";
+                }
+            }else{
+                $html = "<option value=''>--- No Story Found---</option>";
+            }
+            return $html;
+        }
     }
 
 

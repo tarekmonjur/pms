@@ -80,6 +80,7 @@ Route::resource('projects/{project}/stories', 'Project\StoryController');
  */
 Route::resource('projects/{project}/stories/{story}/tasks', 'Task\TaskController');
 Route::get('projects/{project}/stories/{story}/tasks/{task}/tracking/{status}', 'Task\TaskController@taskWorkTracking');
+Route::get('get-stories-by-project/{project_id}', 'Task\TaskController@getStoryByProject');
 
 /*
  * Task Comment routes.

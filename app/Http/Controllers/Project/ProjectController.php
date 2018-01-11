@@ -188,19 +188,6 @@ class ProjectController extends Controller
 
     public function edit(Request $request)
     {
-        if($request->ajax()){
-            if($request->project) {
-                $stories = Story::where('project_id', $request->project)->get();
-                $html = "<option value=''>--- Select Story ---</option>";
-                foreach ($stories as $story) {
-                    $html .= "<option value=".$story->id.">".$story->story_title."</option>";
-                }
-            }else{
-                $html = "<option value=''>--- No Story Found---</option>";
-            }
-            return $html;
-        }
-
         $data['teams'] = Team::orderBy('id', 'desc')->get();
         $data['project'] = Project::find($request->project);
         return view('project.edit')->with($data);
