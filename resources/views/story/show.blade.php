@@ -38,10 +38,8 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" id="story_tabs">
                         <li class="active"><a href="#story" data-toggle="tab">Story</a></li>
-                        @if(canAccess("stories/tasks"))
                         <li><a href="#story_tab" data-toggle="tab">All Tasks</a></li>
                         <li><a href="#calender_view_tab" data-toggle="tab">Calender View</a></li>
-                        @endif
                         <li><a href="#story_activity" data-toggle="tab">Story Activity</a></li>
                     </ul>
 

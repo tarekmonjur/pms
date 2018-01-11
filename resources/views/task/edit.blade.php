@@ -9,7 +9,7 @@
                 <li><a href="{{url('/projects/'.$task->project_id)}}">{{$task->project->project_title or ''}}</a></li>
                 <li><a href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id)}}">{{$task->story->story_title or ''}}</a></li>
                 <li>Edit Task</li>
-                <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id.'/tasks')}}"> View Tasks</a>
+                <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/'.$task->project_id.'/stories/'.$task->story_id)}}"> View Tasks</a>
             </ol>
         </h1>
     </section>
