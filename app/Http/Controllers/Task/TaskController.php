@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Task;
 
 use App\Jobs\TaskCreateActivityJob;
 use App\Jobs\TaskUpdateActivityJob;
+use App\Models\Access;
 use App\Models\Activity;
 use App\Models\Document;
 use App\Models\Project;
@@ -34,7 +35,7 @@ class TaskController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission')->except('taskWorkTracking');
+        $this->middleware('permission')->except("taskWorkTracking", "index", "show");
         $this->middleware(function($request, $next){
             $this->auth = Auth::user();
             return $next($request);
@@ -152,10 +153,27 @@ class TaskController extends Controller
 
     public function show(Request $request)
     {
-        $data['task'] = Task::with('works','documents.project','documents.story','documents.task','comments.user', 'assignTo', 'assignBy')
-            ->where('project_id', $request->project)
-            ->where('story_id', $request->story)
-            ->find($request->task);
+        if(canAccess("stories/tasks")) {
+            $data['task'] = Task::with('works', 'documents.project', 'documents.story', 'documents.task', 'comments.user', 'assignTo', 'assignBy')
+                ->where('project_id', $request->project)
+                ->where('story_id', $request->story)
+                ->find($request->task);
+        }else{
+            $is_project_owner = (Project::where('created_by', $this->auth->id)->count() > 0) ? true : false;
+            if ($is_project_owner === false) {
+                $task_access = Access::get_access_task_by_user_id_story_id($this->auth->id, $request->story);
+            }else{
+                $task_access = [];
+            }
+
+            $taskData = Task::with('works', 'documents.project', 'documents.story', 'documents.task', 'comments.user', 'assignTo', 'assignBy')
+                ->where('project_id', $request->project)
+                ->where('story_id', $request->story);
+                if ($is_project_owner === false) {
+                    $taskData->whereIn('id', $task_access);
+                }
+            $data['task'] = $taskData->find($request->task);
+        }
 
         $teams = User::get();
         $team_list = [];
