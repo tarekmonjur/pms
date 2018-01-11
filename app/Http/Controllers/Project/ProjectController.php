@@ -48,10 +48,10 @@ class ProjectController extends Controller
     public function index()
     {
         if(canAccess("projects")) {
+            $data['projects'] = Project::orderBy('id', 'desc')->get();
+        }else{
             $project_access = Access::get_access_project_by_user_id($this->auth->id);
             $data['projects'] = Project::whereIn('id', $project_access)->orderBy('id', 'desc')->get();
-        }else{
-            $data['projects'] = Project::orderBy('id', 'desc')->get();
         }
         return view('project.index')->with($data);
     }
