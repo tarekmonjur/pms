@@ -57,6 +57,8 @@ class AccessPermission
                     $url .= '/delete';
                 }else if(strtolower($method) == "put"){
                     $url .= '/edit';
+                }else if(strtolower($method) == "post"){
+                    $url = $url3.'/create';
                 }else{
                     $url .= '/'.$url3;
                 }
