@@ -3,11 +3,13 @@
 
     <section class="content-header">
         <h1>
-            Manage Company
-            <small> show all companies.</small>
-            @if(canAccess("company/create"))
-            <a class="btn btn-primary pull-right" href="{{url('/company/create')}}"> Create Company</a>
-            @endif
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active"><a href="{{url('/company')}}">Manage Companies</a></li>
+                @if(canAccess("company/create"))
+                    <a class="btn btn-primary breadcrumb-btn pull-right" href="{{url('/company/create')}}"> Create Company</a>
+                @endif
+            </ol>
         </h1>
     </section>
 
@@ -40,10 +42,10 @@
                             <td>
                                 <div class="btn-group">
                                     @if($edit == true)
-                                    <a class="btn btn-sm btn-success" href="{{url('company/'.$company->id.'/edit')}}">Edit</a>
+                                    <a class="btn btn-xs btn-success" href="{{url('company/'.$company->id.'/edit')}}">Edit</a>
                                     @endif
                                     @if($delete == true)
-                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this company?', 'delete_{{$company->id}}')" class="btn btn-sm btn-danger" href="#">Delete</a>
+                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this company?', 'delete_{{$company->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
                                     <form method="post" action="{{url('company/'.$company->id)}}" id="delete_{{$company->id}}">
                                         {{csrf_field()}}
                                         {{method_field('delete')}}

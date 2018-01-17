@@ -47,23 +47,47 @@
     <style>
         .breadcrumb{
             margin-bottom: 0px!important;
+            font-size: 18px!important;
+            border-radius: 0px!important;
+            background-color: #ffffff!important;
         }
         .breadcrumb-btn {
             float: right!important;
             position: absolute;
-            right: 20px;
-            bottom: 5px;
+            right: 30px;
+            padding: 5px 10px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 0px !important;
+        }
+
+        .box{
+            border: none!important;
+            border-radius: 0px!important;
+            padding: 0px!important;
+            box-shadow: none!important;
+        }
+        .content-wrapper {
+            min-height: 100%;
+            background-color: #ffffff!important;
+            z-index: 800;
+        }
+        .skin-black-light .main-header>.logo{
+            border-right: none!important;
         }
     </style>
 </head>
 
-<body class="hold-transition skin-black layout-top-nav">
+<body class="skin-black-light sidebar-mini fixed">
     <div class="wrapper">
 
-        @include('layouts.common.header')
+
+        @include('layouts.common.header_new')
+
+        @include('layouts.common.sidebar')
 
         <div class="content-wrapper">
-            <div class="container">
+            <div class="content">
 
                 @if(Session('msg_success'))
                     <div class="alert alert-success alert-dismissible" role="alert" style="margin-bottom: 0px!important; margin-top: 10px!important;">
@@ -83,9 +107,9 @@
 
             </div>
         </div>
-    </div>
 
-    @include('layouts.common.footer')
+        @include('layouts.common.footer')
+    </div>
 
     <!-- jQuery 3 -->
     <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>

@@ -3,11 +3,13 @@
 
     <section class="content-header">
         <h1>
-            Manage Department
-            <small> show all companies department.</small>
-            @if(canAccess("department/create"))
-            <a class="btn btn-primary pull-right" href="{{url('/department/create')}}"> Create Department</a>
-            @endif
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active"><a href="{{url('/department')}}">Manage Departments</a></li>
+                @if(canAccess("department/create"))
+                    <a class="btn btn-primary breadcrumb-btn pull-right" href="{{url('/department/create')}}"> Create Department</a>
+                @endif
+            </ol>
         </h1>
     </section>
 

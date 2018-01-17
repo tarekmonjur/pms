@@ -3,11 +3,13 @@
 
     <section class="content-header">
         <h1>
-            Manage Team
-            <small> show all teams.</small>
-            @if(canAccess("teams/create"))
-            <a class="btn btn-primary pull-right" href="{{url('/teams/create')}}"> Create Teams</a>
-            @endif
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active"><a href="{{url('/teams')}}">Manage Teams</a></li>
+                @if(canAccess("teams/create"))
+                    <a class="btn btn-primary breadcrumb-btn pull-right" href="{{url('/teams/create')}}"> Create Teams</a>
+                @endif
+            </ol>
         </h1>
     </section>
 

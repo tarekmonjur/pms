@@ -3,11 +3,13 @@
 
     <section class="content-header">
         <h1>
-            Manage Role Permissions
-            <small> show all roles.</small>
-            @if(canAccess("roles/create"))
-            <a class="btn btn-primary pull-right" href="{{url('/roles/create')}}"> Create Role</a>
-            @endif
+            <ol class="breadcrumb" style="left: 0px!important;">
+                <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active"><a href="{{url('/roles')}}">Manage Role Permissions</a></li>
+                @if(canAccess("roles/create"))
+                    <a class="btn btn-primary breadcrumb-btn pull-right" href="{{url('/roles/create')}}"> Create Role</a>
+                @endif
+            </ol>
         </h1>
     </section>
 
@@ -39,12 +41,12 @@
                             <td>{{$role->created_at->format('Y-m-d')}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-sm btn-primary" href="#" onclick="viewPermission('{{url('roles/'.$role->id)}}')">View</a>
+                                    <a class="btn btn-xs btn-primary" href="#" onclick="viewPermission('{{url('roles/'.$role->id)}}')">View</a>
                                     @if($edit == true)
-                                    <a class="btn btn-sm btn-success" href="{{url('roles/'.$role->id.'/edit')}}">Edit</a>
+                                    <a class="btn btn-xs btn-success" href="{{url('roles/'.$role->id.'/edit')}}">Edit</a>
                                     @endif
                                     @if($delete == true)
-                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this role?', 'delete_{{$role->id}}')" class="btn btn-sm btn-danger" href="#">Delete</a>
+                                    <a onclick="return confirmDelete('delete', 'Are you sure delete this role?', 'delete_{{$role->id}}')" class="btn btn-xs btn-danger" href="#">Delete</a>
                                     <form method="post" action="{{url('roles/'.$role->id)}}" id="delete_{{$role->id}}">
                                         {{csrf_field()}}
                                         {{method_field('delete')}}

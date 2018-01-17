@@ -5,7 +5,7 @@
         <h1>
             <ol class="breadcrumb" style="left: 0px!important;">
                 <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active"><a href="{{url('/projects')}}">Project</a></li>
+                <li class="active"><a href="{{url('/projects')}}">Manage Projects</a></li>
                 @if(canAccess("projects/create"))
                 <a class="btn btn-primary breadcrumb-btn" href="{{url('/projects/create')}}"> Create Project</a>
                 @endif
@@ -19,7 +19,7 @@
     ?>
 
     <section class="content">
-        <div class="box box-primary">
+        <div class="box">
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
