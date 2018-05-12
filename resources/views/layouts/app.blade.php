@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'IDDL') }}</title>
+    <title>{{ config('app.name', 'PMS') }}</title>
 
     <!-- Styles -->
     <link href="{{asset('/css/app.css')}}" rel="stylesheet">
@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-sm-4 pull-right text-center" style="margin-bottom: 10px">
                 Design & Developed
-                <h4>Intelligence design and dynamic</h4>
+                <h4>Tarek Ahammed</h4>
                 <!-- <img class="img-responsive" src="{{asset('images/logo.png')}}" alt=""> -->
             </div>
         </div>
