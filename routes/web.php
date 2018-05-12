@@ -25,11 +25,12 @@ Route::get('logout','Auth\LoginController@logout');
 /*
  * Forgot & Reset Password Route
  */
-Route::group(['prefix' => 'password'],function(){
-    Route::get('forgot','Auth\ForgotPasswordController@showMailSend');
-    Route::post('sendmail','Auth\ForgotPasswordController@sendMail');
-    Route::get('reset/{token}/{email}','Auth\ResetPasswordController@showResetPassword');
-    Route::post('reset','Auth\ResetPasswordController@resetPassword');
+Route::group(['prefix' => 'password', 'namespace' => 'Auth'],function(){
+    //Password Reset Routes...
+    Route::get('reset', 'ForgotPasswordController@showLinkRequestForm');
+    Route::post('email', 'ForgotPasswordController@sendResetLinkEmail');
+    Route::get('reset/{token?}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('reset', 'ResetPasswordController@reset');
 });
 
 

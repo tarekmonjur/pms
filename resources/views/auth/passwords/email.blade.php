@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="text-center">Reset Password</h3></div>
+                <div class="panel-heading"><h3 class="text-center">Forgot Password</h3></div>
                 <div class="panel-body">
                     @if(Session('msg_success'))
                         <div class="alert alert-success alert-dismissible" role="alert">
@@ -27,14 +27,14 @@
                             <strong>Error! </strong> {{Session('msg_error')}}
                         </div>
                     @endif
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/sendmail') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('password/email') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-3 control-label">Email Address</label>
 
                             <div class="col-md-8">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">

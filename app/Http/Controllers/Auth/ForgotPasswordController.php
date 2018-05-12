@@ -2,90 +2,31 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
-use App\Mail\UserForgotPassword;
-
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
+use App\Service\Admin\Auth\SendsPasswordResetEmails;
 
 class ForgotPasswordController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Forgot Password Controller
+    | Password Reset Controller
     |--------------------------------------------------------------------------
     |
-    | @Description : User Forgot Password.
-    | @Author : IDDL.
-    | @Email : tarekmonjur@gmail.com
+    | This controller is responsible for handling password reset emails and
+    | includes a trait which assists in sending these notifications from
+    | your application to your users. Feel free to explore this trait.
     |
     */
 
-
-    /**
-     * The user model instance define.
-     */
-    protected $user;
-
+    use SendsPasswordResetEmails;
 
     /**
      * Create a new controller instance.
-     * @param User $user
+     *
+     * @return void
      */
-    public function __construct(User $user)
+    public function __construct()
     {
         $this->middleware('guest');
-        $this->user = $user;
     }
-
-
-    /**
-     * Show forget password send mail form
-     * @route password/forgot(get)
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function showMailSend()
-    {
-        return view('auth.passwords.email');
-    }
-
-
-    /**
-     * Forgot password mail send
-     * @route password/sendmail(post)
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function sendMail(Request $request){
-        $this->validate($request,['email'=>'required|email']);
-        $token = str_random(60);
-
-        try{
-            $user = $this->user->where('email',$request->email)->first();
-
-            if(!$user){
-                $request->session()->flash('msg_error','Sorry, Mail not send!');
-                return back()->withInput();
-            }
-
-            $user->token = $token;
-            $user->save();
-
-            $user->link = '/password/reset/'.$token.'/'.base64_encode($request->email);
-
-            Mail::to($request->email)->send(new UserForgotPassword($user));
-
-            $request->session()->flash('msg_success','Forgot Password Mail Send.');
-            return back();
-        }catch (\Exception $e){
-            $request->session()->flash('msg_error','Sorry, Mail not send!');
-            return back()->withInput();
-        }
-    }
-
-
-
-
-
 }

@@ -75,10 +75,84 @@
         .skin-black-light .main-header>.logo{
             border-right: none!important;
         }
+
+        .swal2-confirm.btn.btn-success{margin-right: 5px!important;}
+
+.skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav>li>a, .skin-black-light .main-header .navbar .navbar-right>li>a{
+    border-left: none;
+}
+.skin-black-light .main-header .navbar>.sidebar-toggle{
+    border-right: none;
+}
+.content{font-size: 12px;}
+.breadcrumb{
+    margin-bottom: 0px!important;
+    font-size: 16px!important;
+    border-radius: 0px!important;
+    background-color: #ffffff!important;
+    padding: 6px 0px !important;
+}
+.breadcrumb-btn {
+    float: right!important;
+    position: absolute;
+    right: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 0px !important;
+}
+
+.box{
+    border: none!important;
+    border-radius: 0px!important;
+    padding: 0px!important;
+    box-shadow: none!important;
+    margin-top: 10px!important;
+}
+.content-wrapper {
+    min-height: 100%;
+    background-color: #ffffff!important;
+    z-index: 800;
+}
+.skin-black-light .main-header>.logo{
+    border-right: none!important;
+}
+
+
+.skin-blue-light .sidebar-menu > li:hover > a, .skin-blue-light .sidebar-menu > li.active > a, .skin-blue-light .sidebar-menu > li.menu-open > a{
+    color: #ffffff!important;
+    background: #3b8dbc!important;
+}
+.skin-blue-light .sidebar-menu > li > .treeview-menu{
+    background: #519cc7!important;
+}
+.skin-blue-light .sidebar-menu .treeview-menu > li > a {
+    color: #ffffff!important;
+}
+.skin-blue-light .sidebar-menu .treeview-menu > li > a.active {
+    color: #000!important;
+    font-weight: bolder;
+}
+
+.swal2-confirm.btn.btn-success{margin-right: 5px!important;}
+        .skin-blue-light .sidebar-menu > li:hover > a, .skin-blue-light .sidebar-menu > li.active > a, .skin-blue-light .sidebar-menu > li.menu-open > a{
+            color: #ffffff!important;
+            background: #3b8dbc!important;
+        }
+        .skin-blue-light .sidebar-menu > li > .treeview-menu{
+            background: #519cc7!important;
+        }
+        .skin-blue-light .sidebar-menu .treeview-menu > li > a {
+            color: #ffffff!important;
+        }
+        .skin-blue-light .sidebar-menu .treeview-menu > li > a.active {
+            color: #000!important;
+            font-weight: bolder;
+        }
     </style>
 </head>
 
-<body class="skin-black-light sidebar-mini fixed">
+<body class="skin-blue-light sidebar-mini fixed">
     <div class="wrapper">
 
 
