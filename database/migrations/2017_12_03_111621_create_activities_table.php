@@ -13,13 +13,14 @@ class CreateActivitiesTable extends Migration
      */
     public function up()
     {
-//        Schema::connection("mongodb")->table('activities', function (Blueprint $collection) {
-//            $collection->index('project_id');
-//            $collection->index('story_id');
-//            $collection->integer('task_id');
-//            $collection->text('activity');
-//            $collection->timestamps();
-//        });
+        Schema::create('activities', function (Blueprint $table) {
+           $table->integer('user_id')->unsigned();
+           $table->integer('project_id')->unsigned();
+           $table->integer('story_id')->unsigned();
+           $table->integer('task_id')->unsigned();
+           $table->text('activity');
+           $table->string('date');
+       });
     }
 
     /**
@@ -29,8 +30,6 @@ class CreateActivitiesTable extends Migration
      */
     public function down()
     {
-//        Schema::connection("mongodb")->table('activities', function (Blueprint $collection) {
-//            $collection->dropIndex('project_id');
-//        });
+       
     }
 }

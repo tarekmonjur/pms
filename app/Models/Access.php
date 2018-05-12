@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Access extends Model
 {
 
-    protected $connection = 'mongodb';
-
-    protected $collection = 'accesses';
+    protected $table = 'accesses';
 
 
     public static function get_access_project_by_user_id($user_id)

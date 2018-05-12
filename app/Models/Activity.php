@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
 
-    protected $connection = 'mongodb';
-
-    protected $collection = 'activities';
+    protected $table = 'activities';
 
 
 }
