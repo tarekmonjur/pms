@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="text-center">Admin Reset Password</h3></div>
+                <div class="panel-heading"><h3 class="text-center">Reset Password</h3></div>
                 <div class="panel-body">
                     @if(Session('msg_success'))
                         <div class="alert alert-success alert-dismissible" role="alert">
@@ -46,7 +46,7 @@
 
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-3">
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn btn-primary">
                                     Send Password Reset Link
                                 </button>
                             </div>
