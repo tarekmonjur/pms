@@ -30,7 +30,6 @@
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Status</th>
-                        <th>Project Doc</th>
                         <th>Project Details</th>
                         <th>Created</th>
                         <th width="80px">Action</th>
@@ -54,7 +53,6 @@
                             <td>
                                 <label class="label @if($project->project_status == "initiate") label-primary @elseif($project->project_status == "pending") label-warning @elseif($project->project_status == "progress") label-info @elseif($project->project_status == "done") label-success @endif">{{$project->project_status}}</label>
                             </td>
-                            <td>@if($project->project_doc)<a target="_blank" href="{{asset('uploads/projects/'.$project->project_doc)}}">view doc</a>@else No doc @endif</td>
                             <td>{{$project->project_details}}</td>
                             <td>{{$project->created_at->format('Y-m-d')}}</td>
                             <td>
@@ -84,7 +82,6 @@
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Status</th>
-                        <th>Project Doc</th>
                         <th>Project Details</th>
                         <th>Created</th>
                         <th width="80px">Action</th>

@@ -39,7 +39,7 @@ class StoryUpdateActivityJob implements ShouldQueue
             'user_id' => $this->story->updated_by,
             'project_id' => $this->story->project_id,
             'story_id' => $this->story->id,
-            'task_id' => null,
+            'task_id' => 0,
             'activity' => $activity,
             'date' => $this->story->updated_at
         ]);

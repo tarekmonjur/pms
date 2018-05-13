@@ -45,19 +45,18 @@ class TaskController extends Controller
 
     public function index($project,$story)
     {
-         return redirect()->back();
-//        $data['tasks'] = Task::with('project','story','assignBy', 'assignTo')
-//            ->where('project_id', $project)
-//            ->where('story_id', $story)
-//            ->get();
-//
-//        $data['project_id'] = $project;
-//        $data['story_id'] = $story;
-//
-//        $data['project'] = Project::find($project);
-//        $data['story'] = Story::find($story);
-//
-//        return view('task.index')->with($data);
+       $data['tasks'] = Task::with('project','story','assignBy', 'assignTo')
+           ->where('project_id', $project)
+           ->where('story_id', $story)
+           ->get();
+
+       $data['project_id'] = $project;
+       $data['story_id'] = $story;
+
+       $data['project'] = Project::find($project);
+       $data['story'] = Story::find($story);
+
+       return view('task.index')->with($data);
     }
 
 

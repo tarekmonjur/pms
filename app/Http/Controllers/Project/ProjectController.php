@@ -74,7 +74,7 @@ class ProjectController extends Controller
            'project_document' => 'nullable|mimes:jpg,jpeg,png,gif,psd,pdf,doc,docx,pptx|max:4000',
            'project_status' => 'required',
         ]);
-        try {
+        // try {
             $project = new Project;
             $project->project_title = $request->project_title;
             $project->project_team = implode(',', $request->project_teams);
@@ -99,10 +99,10 @@ class ProjectController extends Controller
 
             $request->session()->flash('msg_success', 'Project successfully added.');
             return redirect()->back();
-        }catch(\Exception $e){
-            $request->session()->flash('msg_error', 'Project not added.');
-            return redirect()->back();
-        }
+        // }catch(\Exception $e){
+        //     $request->session()->flash('msg_error', 'Project not added.');
+        //     return redirect()->back();
+        // }
     }
 
 
@@ -242,8 +242,8 @@ class ProjectController extends Controller
             Activity::insert([
                 'user_id' => $this->auth->id,
                 'project_id' => $project->id,
-                'story_id' => null,
-                'task_id' => null,
+                'story_id' => 0,
+                'task_id' => 0,
                 'activity' => $activity,
                 'date' => date('Y-m-d h:i:s')
             ]);

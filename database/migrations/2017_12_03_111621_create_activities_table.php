@@ -19,7 +19,7 @@ class CreateActivitiesTable extends Migration
            $table->integer('story_id')->unsigned();
            $table->integer('task_id')->unsigned();
            $table->text('activity');
-           $table->string('date');
+           $table->timestamp('date');
        });
     }
 

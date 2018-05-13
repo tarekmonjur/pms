@@ -33,8 +33,8 @@ class ProjectCreated
             'user_id' => $this->project->created_by,
             'user_type' => $this->project->createdBy->user_type,
             'project_id' => $this->project->id,
-            'story_id' => '',
-            'task_id' => '',
+            'story_id' => 0,
+            'task_id' => 0,
         ];
 
         if(!empty($this->project->project_team)){
@@ -45,7 +45,7 @@ class ProjectCreated
             if(count($team_members)>0){
                 foreach($team_members as $team_member){
                     if($this->project->created_by != $team_member->id){
-                        $accesses[] = ['user_id' => $team_member->id, 'user_type' => $team_member->user_type, 'project_id' => $this->project->id, 'story_id' => '', 'task_id' => '',];
+                        $accesses[] = ['user_id' => $team_member->id, 'user_type' => $team_member->user_type, 'project_id' => $this->project->id, 'story_id' => 0, 'task_id' => 0,];
                     }
                 }
             }

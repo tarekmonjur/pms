@@ -40,7 +40,7 @@ class StoryCreateActivityJob implements ShouldQueue
             'user_id' => $this->story->created_by,
             'project_id' => $this->story->project_id,
             'story_id' => $this->story->id,
-            'task_id' => null,
+            'task_id' => 0,
             'activity' => $activity,
             'date' => $this->story->created_at
         ]);

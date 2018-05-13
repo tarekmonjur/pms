@@ -38,8 +38,8 @@ class ProjectUpdateActivityJob implements ShouldQueue
         Activity::insert([
             'user_id' => $this->project->updated_by,
             'project_id' => $this->project->id,
-            'story_id' => null,
-            'task_id' => null,
+            'story_id' => 0,
+            'task_id' => 0,
             'activity' => $activity,
             'date' => $this->project->updated_at
         ]);

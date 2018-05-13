@@ -199,7 +199,7 @@ class StoryController extends Controller
                 'user_id' => $this->auth->id,
                 'project_id' => $story->project_id,
                 'story_id' => $story->id,
-                'task_id' => null,
+                'task_id' => 0,
                 'activity' => $activity,
                 'date' => date('Y-m-d h:i:s')
             ]);
